@@ -1,7 +1,7 @@
 package db
 
 import (
-	"e-commerce/data/models"
+	"e-commerce/src/models"
 	"fmt"
 	"os"
 	"time"
