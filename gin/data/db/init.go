@@ -1,6 +1,7 @@
 package db
 
 import (
+	"e-commerce/data/models"
 	"fmt"
 	"os"
 	"time"
@@ -37,4 +38,23 @@ func GetGormConnection() *gorm.DB {
 	// gormDB.AutoMigrate(&model.Product{})
 
 	return db
+}
+
+func Migrate() {
+	fmt.Println("migrating")
+	db := GetGormConnection()
+	db.AutoMigrate(
+		models.User{},
+		models.Shop{},
+		models.Address{},
+		models.Payment{},
+		models.Category{},
+		models.Product{},
+		models.ProductGalleries{},
+		models.Cart{},
+		models.Orders{},
+		models.OrdersProduct{},
+		models.OrdersPayment{},
+		models.OrdersAddress{},
+	)
 }

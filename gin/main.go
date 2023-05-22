@@ -27,6 +27,7 @@ func CORSMiddleware() gin.HandlerFunc {
 
 func handleRequests() {
 	db.GetGormConnection()
+	db.Migrate()
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
