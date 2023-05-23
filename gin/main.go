@@ -6,6 +6,10 @@ import (
 	"e-commerce/data/db"
 
 	"github.com/gin-gonic/gin"
+
+	UserDelivery "e-commerce/module/user/delivery"
+	UserRepo "e-commerce/module/user/repository"
+	UserUsecase "e-commerce/module/user/usecase"
 )
 
 
@@ -26,14 +30,26 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func handleRequests() {
-	db.GetGormConnection()
-	db.Migrate()
+	conn:=db.GetGormConnection()
+
+	userRepository := UserRepo.NewUser(conn)
+	userUsecase := UserUsecase.NewUserUscs(userRepository)
+	userDelivery := UserDelivery.NewUserHandler(userUsecase)
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	// router.Static("/docs", "./dist")
 
 	router.Use(CORSMiddleware())
+
+	v1 := router.Group("/api/v1")
+	{
+		auth := v1.Group("/auth")
+		{
+			auth.POST("/register", userDelivery.Register)
+			auth.POST("/login", userDelivery.Login)
+		}
+	}
 
 	log.Println("Running HTTP server at 8080")
 	router.Run("localhost:8080")

@@ -12,9 +12,6 @@ type User struct {
 	PhoneNo	  		string         	`gorm:"column:phone_no" json:"phone_no"`
 	Fullname	 	string         	`gorm:"column:fullname" json:"fullname"`
 	Password     	string         	`gorm:"column:password" json:"password"`
-	Gender 			string  		`gorm:"column:gender" json:"gender"`
-	BirthDate		time.Time      	`gorm:"column:birth_date" json:"birth_date"`
-	PhotoUrl    	string         	`gorm:"column:photo_url" json:"photo_url"`
 	Role         	int            	`gorm:"column:role" json:"role"`
 	CreatedAt    	time.Time      	`gorm:"column:created_at" json:"created_at"`
 	UpdatedAt    	time.Time      	`gorm:"column:updated_at" json:"updated_at"`
