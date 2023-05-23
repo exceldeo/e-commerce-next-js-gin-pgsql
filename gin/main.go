@@ -14,6 +14,10 @@ import (
 	CategoryDelivery "e-commerce/module/category/delivery"
 	CategoryRepo "e-commerce/module/category/repository"
 	CategoryUsecase "e-commerce/module/category/usecase"
+
+	ProductDelivery "e-commerce/module/product/delivery"
+	ProductRepo "e-commerce/module/product/repository"
+	ProductUsecase "e-commerce/module/product/usecase"
 )
 
 
@@ -44,6 +48,10 @@ func handleRequests() {
 	categoryUsecase := CategoryUsecase.NewCategoryUscs(categoryRepository)
 	categoryDelivery := CategoryDelivery.NewCategoryHandler(categoryUsecase)
 
+	productRepository := ProductRepo.NewProduct(conn)
+	productUsecase := ProductUsecase.NewProductUscs(productRepository)
+	productDelivery := ProductDelivery.NewProductHandler(productUsecase)
+
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
@@ -55,6 +63,7 @@ func handleRequests() {
 	{
 		auth := v1.Group("/auth")
 		category := v1.Group("/category")
+		product := v1.Group("/product")
 		{
 			auth.POST("/register", userDelivery.Register)
 			auth.POST("/login", userDelivery.Login)
@@ -63,6 +72,11 @@ func handleRequests() {
 			category.GET("/", categoryDelivery.GetAll)
 			category.GET("/:id", categoryDelivery.GetByID)
 			category.GET("/slug/:slug", categoryDelivery.GetBySlug)
+		}
+		{
+			product.GET("/", productDelivery.GetAll)
+			product.GET("/:id", productDelivery.GetByID)
+			product.GET("/slug/:slug", productDelivery.GetBySlug)
 		}
 
 	}
