@@ -27,7 +27,7 @@ type Orders struct {
 	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at" json:"deleted_at"`
 	User User `gorm:"foreignKey:UserId"`
 	Shop Shop `gorm:"foreignKey:ShopId"`
-	OrdersProduct *[]OrdersProduct `gorm:"foreignKey:OrderId"`
+	OrdersProduct []*OrdersProduct `gorm:"foreignKey:OrderId"`
 	OrdersPayment *OrdersPayment `gorm:"foreignKey:OrderId"`
 	OrdersAddress *OrdersAddress `gorm:"foreignKey:OrderId"`
 }

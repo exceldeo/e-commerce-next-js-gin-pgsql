@@ -16,11 +16,11 @@ type User struct {
 	CreatedAt    	time.Time      	`gorm:"column:created_at" json:"created_at"`
 	UpdatedAt    	time.Time      	`gorm:"column:updated_at" json:"updated_at"`
 	DeletedAt    	gorm.DeletedAt 	`gorm:"column:deleted_at" json:"deleted_at"`
-	Addresses 		*[]Address 		`gorm:"foreignKey:UserId" json:"addresses"`
-	Payments 		*[]Payment 		`gorm:"foreignKey:UserId" json:"payments"`
-	Carts 			*[]Cart 		`gorm:"foreignKey:UserId" json:"carts"`
+	Addresses 		[]*Address 		`gorm:"foreignKey:UserId" json:"addresses"`
+	Payments 		[]*Payment 		`gorm:"foreignKey:UserId" json:"payments"`
+	Carts 			[]*Cart 		`gorm:"foreignKey:UserId" json:"carts"`
 	Shop 			*Shop 			`gorm:"foreignKey:UserId" json:"shop"`
-	Orders 			*[]Orders		`gorm:"foreignKey:UserId" json:"orders"`
+	Orders 			[]*Orders		`gorm:"foreignKey:UserId" json:"orders"`
 }
 
 type RoleType int

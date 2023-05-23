@@ -23,5 +23,5 @@ type Product struct {
 	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at" json:"deleted_at"`
 	Category	 Category      `gorm:"foreignKey:CategoryId" json:"category"`
 	Shop	 Shop      `gorm:"foreignKey:ShopId" json:"shop"`
-	ProductGalleries	 *[]ProductGalleries      `gorm:"foreignKey:ProductId" json:"product_galleries"`
+	ProductGalleries	 []*ProductGalleries      `gorm:"foreignKey:ProductId" json:"product_galleries"`
 }

@@ -22,5 +22,5 @@ type Shop struct {
 	UpdatedAt    time.Time      `gorm:"column:updated_at" json:"updated_at"`
 	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at" json:"deleted_at"`
 	User         User           `gorm:"foreignKey:UserId"`
-	Products    *[]Product      `gorm:"foreignKey:ShopId"`
+	Products    []*Product      `gorm:"foreignKey:ShopId"`
 }

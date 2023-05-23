@@ -5,8 +5,6 @@ import (
 	"e-commerce/module/user"
 	"e-commerce/module/user/delivery/body"
 	"e-commerce/utils/response"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,27 +23,19 @@ func NewUserHandler(usecase user.UseCase) user.Handlers {
 
 func (h *UserHandler) Login(c *gin.Context) {
 
-	reqBody, err := ioutil.ReadAll(c.Request.Body)
-
-	if err != nil {
-		response.ErrorResponse(c.Writer, err.Error(), http.StatusBadRequest)
+	var requestBody body.LoginRequest
+	if err := c.ShouldBind(&requestBody); err != nil {
+		response.ErrorResponse(c.Writer, response.BadRequestMessage, http.StatusBadRequest)
 		return
 	}
 
-	type User struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
-	var us User
-	err = json.Unmarshal(reqBody, &us)
-
+	invalidFields, err := requestBody.Validate()
 	if err != nil {
-		response.ErrorResponse(c.Writer, err.Error(), http.StatusBadRequest)
+		response.ErrorResponseData(c.Writer, invalidFields, response.UnprocessableEntityMessage, http.StatusUnprocessableEntity)
 		return
 	}
 
-	token, err := h.usecase.Login(us.Email, us.Password)
+	token, err := h.usecase.Login(requestBody.Email, requestBody.Password)
 	if err != nil {
 		response.ErrorResponse(c.Writer, err.Error(), http.StatusNotFound)
 		return
