@@ -64,6 +64,24 @@ func (ct *CategoryHandler) GetByID(c *gin.Context)  {
 	
 }
 
+func (ct *CategoryHandler) GetBySlug(c *gin.Context)  {
+	slug := c.Param("slug")
+
+	category, err := ct.usecase.GetBySlug(slug)
+
+	if err != nil {
+		response.ErrorResponse(c.Writer, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	response.SuccessResponse(c.Writer, category, http.StatusOK)
+	
+}
+
+
+
+
+
 func (ct *CategoryHandler) ValidateQueryPagination(c *gin.Context, pgn *pagination.Pagination) {
 	limit := strings.TrimSpace(c.Query("limit"))
 	page := strings.TrimSpace(c.Query("page"))

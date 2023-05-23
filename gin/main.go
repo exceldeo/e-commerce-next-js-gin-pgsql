@@ -62,8 +62,9 @@ func handleRequests() {
 		{
 			category.GET("/", categoryDelivery.GetAll)
 			category.GET("/:id", categoryDelivery.GetByID)
+			category.GET("/slug/:slug", categoryDelivery.GetBySlug)
 		}
-		
+
 	}
 
 	log.Println("Running HTTP server at 8080")

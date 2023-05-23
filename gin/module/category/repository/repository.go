@@ -55,3 +55,15 @@ func (c *categoryRepo) GetByID(id int) (*models.Category, error) {
 	return &category, nil
 }
 
+func (c *categoryRepo) GetBySlug(slug string) (*models.Category, error) {
+	var category models.Category
+	result := c.db.
+		Preload("ChildCategory").
+		First(&category, "slug = ?", slug)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &category, nil
+}
+

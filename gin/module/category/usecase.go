@@ -8,5 +8,6 @@ import (
 type UseCase interface {
 	GetAll(sort string, limit int, offset int) ([]*body.CategoryResponse, error)
 	GetByID(id int) (*models.Category, error)
+	GetBySlug(slug string) (*models.Category, error)
 	
 }

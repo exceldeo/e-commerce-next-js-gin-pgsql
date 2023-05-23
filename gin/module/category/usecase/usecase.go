@@ -64,3 +64,12 @@ func (c *categoryUC) GetByID(id int) (*models.Category, error) {
 
 	return category, nil
 }
+
+func (c *categoryUC) GetBySlug(slug string) (*models.Category, error) {
+	category, err := c.repository.GetBySlug(slug)
+	if err != nil {
+		return nil, err
+	}
+
+	return category, nil
+}
