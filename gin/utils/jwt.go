@@ -25,7 +25,7 @@ func GenerateJWT(email string, role int) (*models.AccessToken, error) {
 	expired_duration, _ := strconv.ParseInt(os.Getenv("EXP_MIN"), 0, 8)
 
 	claims := CustomClaim{
-		 email,
+		email,
 		role,
 		jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(now),
@@ -48,15 +48,15 @@ func GenerateJWT(email string, role int) (*models.AccessToken, error) {
 	return accessToken, nil
 }
 
-func CheckToken(input string) (string, error) {
+func CheckToken(input string) (string, int, error) {
 	token, err := jwt.ParseWithClaims(input, &CustomClaim{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("secret_key")), nil
 	})
 
 	if claims, ok := token.Claims.(*CustomClaim); ok && token.Valid {
-		return claims.Email, nil
+		return claims.Email, claims.RoleID, nil
 	} else {
-		return "", err
+		return "",-1, err
 	}
 }
 
@@ -80,7 +80,7 @@ func CheckAuth(c *gin.Context) {
 
 	token := tokenCheck[1]
 
-	email, err := CheckToken(token)
+	email,role, err := CheckToken(token)
 	if err != nil {
 		response.ErrorResponse(c.Writer, err.Error(), http.StatusBadRequest)
 		c.Abort()
@@ -88,29 +88,30 @@ func CheckAuth(c *gin.Context) {
 	}
 
 	c.Set("email", email)
+	c.Set("role", role)
 	c.Next()
 }
 
-func ExtactToken(c *gin.Context) (string, error) {
+func ExtactToken(c *gin.Context) (string,int, error) {
 
 	authCheck := c.Request.Header["Authorization"]
 
 	if len(authCheck) < 1 {
-		return "", ErrNoAuth
+		return "",-1, ErrNoAuth
 	}
 
 	authString := authCheck[0]
 	tokenCheck := strings.Split(authString, " ")
 	if len(tokenCheck) < 1 {
-		return "", ErrNoAuth
+		return "",-1, ErrNoAuth
 	}
 
 	token := tokenCheck[1]
 
-	email, err := CheckToken(token)
+	email,role, err := CheckToken(token)
 	if err != nil {
-		return "", err
+		return "",-1, err
 	}
 
-	return email, nil
+	return email,role, nil
 }
