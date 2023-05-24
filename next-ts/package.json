@@ -9,12 +9,29 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.7",
+    "@reduxjs/toolkit": "^1.9.1",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "@tanstack/react-query": "^4.20.4",
+    "@tanstack/react-query-devtools": "^4.20.4",
+    "@types/react-simple-maps": "^3.0.0",
     "@t3-oss/env-nextjs": "^0.2.1",
+    "axios": "^1.2.1",
+    "axios-retry": "^3.4.0",
+    "classnames": "^2.3.2",
+    "crypto-js": "^4.1.1",
+    "daisyui": "^2.46.0",
+    "formik": "^2.2.9",
+    "jwt-decode": "^3.1.2",
+    "nextjs-progressbar": "^0.0.16",
+    "qs": "^6.11.0",
     "next": "^13.4.1",
     "next-auth": "^4.21.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.21.4"
+    "yup": "^0.32.11",
+    "yup-password": "^0.2.2",
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "@types/eslint": "^8.21.3",
