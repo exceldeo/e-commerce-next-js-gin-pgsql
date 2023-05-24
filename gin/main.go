@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"e-commerce/data/db"
+	"e-commerce/utils"
 
 	"github.com/gin-gonic/gin"
 
@@ -64,6 +65,7 @@ func handleRequests() {
 		auth := v1.Group("/auth")
 		category := v1.Group("/category")
 		product := v1.Group("/product")
+		user := v1.Group("/user")
 		{
 			auth.POST("/register", userDelivery.Register)
 			auth.POST("/login", userDelivery.Login)
@@ -77,6 +79,39 @@ func handleRequests() {
 			product.GET("/", productDelivery.GetAll)
 			product.GET("/:id", productDelivery.GetByID)
 			product.GET("/slug/:slug", productDelivery.GetBySlug)
+		}
+		{
+			user.Use(utils.CheckAuth)
+			user.GET("/profile", userDelivery.GetProfile)
+			address := user.Group("/address")
+			{
+				address.GET("/", userDelivery.GetAddress)
+				address.GET("/:id", userDelivery.GetDetailAddress)
+				address.POST("/", userDelivery.AddAddress)
+				address.PUT("/:id", userDelivery.UpdateAddress)
+				address.DELETE("/:id", userDelivery.DeleteAddress)
+			}
+			cart := user.Group("/cart")
+			{
+				cart.GET("/", userDelivery.GetCart)
+				cart.POST("/", userDelivery.AddCart)
+				cart.PUT("/:id", userDelivery.UpdateCart)
+				cart.DELETE("/:id", userDelivery.DeleteCart)
+			}
+			payment := user.Group("/payment")
+			{
+				payment.GET("/", userDelivery.GetPayment)
+				payment.POST("/", userDelivery.AddPayment)
+				payment.PUT("/:id", userDelivery.UpdatePayment)
+				payment.DELETE("/:id", userDelivery.DeletePayment)
+			}
+			order := user.Group("/order")
+			{
+				order.GET("/", userDelivery.GetAllOrder)
+				order.GET("/:id", userDelivery.GetDetailOrder)
+				order.POST("/", userDelivery.AddOrder)
+				order.PUT("/:id", userDelivery.UpdateOrder)
+			}
 		}
 
 	}

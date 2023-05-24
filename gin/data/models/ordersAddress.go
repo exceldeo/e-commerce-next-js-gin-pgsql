@@ -11,7 +11,7 @@ type OrdersAddress struct {
 	OrderId  int            `gorm:"column:order_id" json:"order_id"`
 	Name         string         `gorm:"column:name" json:"name"`
 	ProvinceId   int            `gorm:"column:province_id" json:"province_id"`
-	Provice string `gorm:"column:province" json:"province"`
+	Province string `gorm:"column:province" json:"province"`
 	CityId       int            `gorm:"column:city_id" json:"city_id"`
 	CityName     string         `gorm:"column:city_name" json:"city_name"`
 	AddressDetail	 string         `gorm:"column:address_detail" json:"address_detail"`
