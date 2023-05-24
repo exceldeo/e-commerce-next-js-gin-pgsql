@@ -19,6 +19,10 @@ import (
 	ProductDelivery "e-commerce/module/product/delivery"
 	ProductRepo "e-commerce/module/product/repository"
 	ProductUsecase "e-commerce/module/product/usecase"
+
+	ShopDelivery "e-commerce/module/shop/delivery"
+	ShopRepo "e-commerce/module/shop/repository"
+	ShopUsecase "e-commerce/module/shop/usecase"
 )
 
 
@@ -53,6 +57,10 @@ func handleRequests() {
 	productUsecase := ProductUsecase.NewProductUscs(productRepository)
 	productDelivery := ProductDelivery.NewProductHandler(productUsecase)
 
+	shopRepository := ShopRepo.NewShop(conn)
+	shopUsecase := ShopUsecase.NewShopUscs(shopRepository)
+	shopDelivery := ShopDelivery.NewShopHandler(shopUsecase)
+
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
@@ -66,6 +74,8 @@ func handleRequests() {
 		category := v1.Group("/category")
 		product := v1.Group("/product")
 		user := v1.Group("/user")
+		shop := v1.Group("/shop")
+
 		{
 			auth.POST("/register", userDelivery.Register)
 			auth.POST("/login", userDelivery.Login)
@@ -112,6 +122,26 @@ func handleRequests() {
 				order.POST("/", userDelivery.AddOrder)
 				order.PUT("/:id", userDelivery.UpdateOrder)
 			}
+		}
+		{
+			shop.Use(utils.CheckAuth)
+			shop.GET("/profile", shopDelivery.GetShop)
+			shop.POST("/register", shopDelivery.Register)
+			product := shop.Group("/product")
+			{
+				product.GET("/", shopDelivery.GetAllProductShop)
+				product.GET("/:id", shopDelivery.GetDetailProductShop)
+				product.POST("/", shopDelivery.AddProduct)
+				product.PUT("/:id", shopDelivery.UpdateProduct)
+				product.DELETE("/:id", shopDelivery.DeleteProduct)
+			}
+			order := shop.Group("/order")
+			{
+				order.GET("/", shopDelivery.GetAllOrder)
+				order.GET("/:id", shopDelivery.GetDetailOrder)
+				order.PUT("/:id", shopDelivery.UpdateOrder)
+			}
+
 		}
 
 	}

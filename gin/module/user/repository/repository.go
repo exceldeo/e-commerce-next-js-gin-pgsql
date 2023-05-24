@@ -121,7 +121,7 @@ func(u *userRepo) AddAddress(address models.Address) (*models.Address, error) {
 }
 
 func(u *userRepo) UpdateAddress(address models.Address) (*models.Address, error) {
-	result := u.db.Save(&address)
+	result := u.db.Updates(&address)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -162,7 +162,7 @@ func(u *userRepo) AddCart(cart models.Cart) (*models.Cart, error) {
 }
 
 func(u *userRepo) UpdateCart(cart models.Cart) (*models.Cart, error) {
-	result := u.db.Save(&cart)
+	result := u.db.Updates(&cart)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -217,7 +217,7 @@ func(u *userRepo) AddPayment(payment models.Payment) (*models.Payment, error) {
 }
 
 func(u *userRepo) UpdatePayment(payment models.Payment) (*models.Payment, error) {
-	result := u.db.Save(&payment)
+	result := u.db.Updates(&payment)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -310,7 +310,7 @@ func(u *userRepo) AddOrderAddress(ordersAddress models.OrdersAddress) (*models.O
 }
 
 func(u *userRepo) UpdateOrder(orders models.Orders) (*models.Orders, error) {
-	result := u.db.Save(&orders)
+	result := u.db.Where("id = ?", orders.Id).Updates(&orders)
 	if result.Error != nil {
 		return nil, result.Error
 	}
