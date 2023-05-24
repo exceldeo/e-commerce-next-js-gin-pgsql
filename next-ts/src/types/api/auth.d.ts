@@ -1,4 +1,7 @@
 export interface AccessTokenData {
-  access_token: string;
-  expired_at: string;
+  token: string;
+}
+
+export interface OauthError {
+  path_url: string;
 }

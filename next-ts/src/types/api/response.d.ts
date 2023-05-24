@@ -1,6 +1,9 @@
 export interface APIResponse<T> {
-  message: string;
+  success: boolean;
   data: T | undefined;
+  message: string | undefined;
+  errcode: number | undefined;
+  error: T | undefined;
 }
 
 export interface PaginationData<T> {
@@ -9,5 +12,5 @@ export interface PaginationData<T> {
   sort: string;
   total_rows: number;
   total_pages: number;
-  datas: T[] | null;
+  rows: T[] | null;
 }
