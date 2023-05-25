@@ -15,6 +15,7 @@ import ServeLangItem from '../../Helpers/ServeLangItem';
 import isAuth from '../../../../Middleware/isAuth';
 import apiRequest from '../../../../utils/apiRequest';
 import { useGetProfile } from '../../../api/seller/profile';
+import ProductTab from './tabs/ProductTab';
 
 function Dashboard() {
   const location = useRouter();
@@ -95,7 +96,7 @@ function Dashboard() {
                           <IcoLogout />
                         </span>
                         <span className=' cursor-pointer text-base font-normal capitalize'>
-                          {ServeLangItem()?.Logout}
+                          Back
                         </span>
                       </div>
                     </Link>
@@ -111,7 +112,7 @@ function Dashboard() {
                   ) : active === 'order' ? (
                     <></>
                   ) : active === 'product' ? (
-                    <></>
+                    <ProductTab />
                   ) : (
                     ''
                   )}
