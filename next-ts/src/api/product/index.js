@@ -9,7 +9,7 @@ const getAllProducts = async (productQuery) => {
   const query = qs.stringify({
     ...productQuery,
   });
-  const response = await unauthorizedClient.get('product/all?' + query);
+  const response = await unauthorizedClient.get('product?' + query);
   return response.data;
 };
 

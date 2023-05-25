@@ -1,32 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import Banner from './Banner';
-import BrandSection from './BrandSection';
 import CategorySection from './CategorySection';
 import LoaderStyleTwo from '../Helpers/Loaders/LoaderStyleTwo';
 import SectionStyleThree from '../Helpers/SectionStyleThree';
 import Layout from '../Partials/Layout';
-import { useGetAllBrands } from '../../api/brand';
 import { useGetAllCategories } from '../../api/category';
 import { useGetAllProducts } from '../../api/product';
 
 function Home() {
-  const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState({
     products: false,
     categories: false,
   });
-
-  const getBrands = useGetAllBrands();
-
-  useEffect(() => {
-    if (getBrands.isSuccess) {
-      setBrands(getBrands.data.data.brands);
-      setIsLoading({ ...isLoading, brands: true });
-    }
-  }, [getBrands?.data?.data.brands, getBrands.isSuccess]);
 
   const getCategories = useGetAllCategories();
 
@@ -54,14 +41,10 @@ function Home() {
   return (
     <>
       <Layout>
-        {getProducts.isLoading &&
-        getCategories.isLoading &&
-        getBrands.isLoading ? (
+        {getProducts.isLoading && getCategories.isLoading ? (
           <div
             className={`pin fixed left-0 top-0 z-[9000] h-screen  w-screen overflow-y-hidden bg-black/[0.4] bg-current${
-              getProducts.isLoading &&
-              getCategories.isLoading &&
-              getBrands.isLoading
+              getProducts.isLoading && getCategories.isLoading
                 ? 'block'
                 : 'hidden'
             }
