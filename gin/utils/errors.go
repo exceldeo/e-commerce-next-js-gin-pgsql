@@ -14,3 +14,11 @@ var (
 	ErrFillForm        = errors.New("name, email and password cannot be empty")
 	ErrPassWrong       = errors.New("password wrong")
 )
+
+func ConvertError(err error) error {
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
