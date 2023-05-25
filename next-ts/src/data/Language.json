@@ -403,6 +403,8 @@
   "Cart_is_Empty": "Cart is Empty",
   "Username": "Username",
   "Shop": "Shop",
+  "List_Product": "List Product",
+  "Seller_Menu": "Seller Menu",
   "ErrMsg": {
     "not_select_shipping_address": "Please select shipping address",
     "not_select_billing_address": "Please select billing address"

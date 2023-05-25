@@ -6,18 +6,16 @@ const unauthorizedClient = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
-    accept: 'application/json',
+    'Access-Control-Allow-Origin': '*',
   },
-  withCredentials: true,
 });
 
 const authorizedClient = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
-    accept: 'application/json',
+    'Access-Control-Allow-Origin': '*',
   },
-  withCredentials: true,
 });
 
 authorizedClient.interceptors.request.use(async (req) => {
