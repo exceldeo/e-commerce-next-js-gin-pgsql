@@ -401,6 +401,8 @@
   "Of": "of",
   "Related_Products_By_Vendor": "Related Products By Vendor",
   "Cart_is_Empty": "Cart is Empty",
+  "Username": "Username",
+  "Shop": "Shop",
   "ErrMsg": {
     "not_select_shipping_address": "Please select shipping address",
     "not_select_billing_address": "Please select billing address"
