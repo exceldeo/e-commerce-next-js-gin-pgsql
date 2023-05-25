@@ -81,12 +81,12 @@ func handleRequests() {
 			auth.POST("/login", userDelivery.Login)
 		}
 		{
-			category.GET("/", categoryDelivery.GetAll)
+			category.GET("", categoryDelivery.GetAll)
 			category.GET("/:id", categoryDelivery.GetByID)
 			category.GET("/slug/:slug", categoryDelivery.GetBySlug)
 		}
 		{
-			product.GET("/", productDelivery.GetAll)
+			product.GET("", productDelivery.GetAll)
 			product.GET("/:id", productDelivery.GetByID)
 			product.GET("/slug/:slug", productDelivery.GetBySlug)
 		}

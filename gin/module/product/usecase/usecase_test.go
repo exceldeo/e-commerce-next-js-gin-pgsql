@@ -7,7 +7,7 @@ import (
 
 type mockProductRepo struct{}
 
-func (m *mockProductRepo) GetAll(sort string, limit int, offset int, slugCategory string, usernameShop string) ([]*models.Product, error) {
+func (m *mockProductRepo) GetAll(sort string, limit int, offset int, slugCategory string, usernameShop string, keyword string) ([]*models.Product, error) {
 	return []*models.Product{}, nil
 }
 
@@ -29,6 +29,7 @@ func Test_productUC_GetAll(t *testing.T) {
 		0,
 		"slug-category",
 		"username-shop",
+		"keyword",
 	)
 	if err != nil {
 		t.Error(err)

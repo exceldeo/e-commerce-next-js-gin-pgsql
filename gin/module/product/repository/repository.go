@@ -17,7 +17,7 @@ func NewProduct(db *gorm.DB) product.Repository {
 	}
 }
 
-func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory string, usernameShop string) ([]*models.Product, error) {
+func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory string, usernameShop string, keyword string) ([]*models.Product, error) {
 	var products []*models.Product
 	result := &gorm.DB{}
 
@@ -28,12 +28,27 @@ func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory st
 				}).
 			Preload("Shop",func(db *gorm.DB) *gorm.DB {
 					return db.Where("username = ?", usernameShop)
-			  	}).
+				  }).
 			Offset(offset).
 			Limit(limit).
 			Order(sort).
 			Where("listing_status = ? and stock > ?", false, 0).
 			Find(&products)
+		if keyword != "" {
+			result = c.db.
+				Preload("Category",func(db *gorm.DB) *gorm.DB {
+						return db.Where("slug = ?", slugCategory)
+					}).
+				Preload("Shop",func(db *gorm.DB) *gorm.DB {
+						return db.Where("username = ?", usernameShop)
+					  }).
+				Offset(offset).
+				Limit(limit).
+				Order(sort).
+				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
+				Find(&products)
+		}
+
 	} else if slugCategory != "" {
 		result = c.db.
 			Preload("Category",func(db *gorm.DB) *gorm.DB {
@@ -45,6 +60,19 @@ func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory st
 			Order(sort).
 			Where("listing_status = ? and stock > ?", false, 0).
 			Find(&products)
+
+		if keyword != "" {
+			result = c.db.
+				Preload("Category",func(db *gorm.DB) *gorm.DB {
+						return db.Where("slug = ?", slugCategory)
+					}).
+				Preload("Shop").
+				Offset(offset).
+				Limit(limit).
+				Order(sort).
+				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
+				Find(&products)
+		}
 	} else if usernameShop != "" {
 		result = c.db.
 			Preload("Category").
@@ -57,6 +85,19 @@ func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory st
 			Order(sort).
 			Where("listing_status = ? and stock > ?", false, 0).
 			Find(&products)
+		if keyword != "" {
+			result = c.db.
+				Preload("Category").
+				Preload("Shop",
+					func(db *gorm.DB) *gorm.DB {
+					return db.Where("username = ?", usernameShop)
+				}).
+				Offset(offset).
+				Limit(limit).
+				Order(sort).
+				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
+				Find(&products)
+		}
 	} else {
 		result = c.db.
 			Preload("Category").
@@ -66,6 +107,16 @@ func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory st
 			Order(sort).
 			Where("listing_status = ? and stock > ?", false, 0).
 			Find(&products)
+		if keyword != "" {
+			result = c.db.
+				Preload("Category").
+				Preload("Shop").
+				Offset(offset).
+				Limit(limit).
+				Order(sort).
+				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
+				Find(&products)
+		}
 	}
 	if result.Error != nil {
 		return nil, result.Error
