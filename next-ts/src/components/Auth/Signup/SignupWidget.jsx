@@ -10,28 +10,19 @@ import InputSelect from '../../Helpers/InputSelect';
 import LoaderStyleOne from '../../Helpers/Loaders/LoaderStyleOne';
 import ServeLangItem from '../../Helpers/ServeLangItem';
 import { useRegistration } from '../../../api/auth/registration';
-import { useGetAllCompanyK3s } from '../../../api/companyK3s';
 
 function SignupWidget() {
   const registration = useRegistration();
 
   const registrationForm = useFormik({
     initialValues: {
-      employee_code: '',
       email: '',
-      name: '',
       password: '',
-      password_confirmation: '',
       no_phone: '',
-      document: '',
-      ktp_pic: '',
-      company: '',
+      name: '',
+      password_confirmation: '',
     },
     validationSchema: Yup.object({
-      employee_code: Yup.string()
-        .min(3, 'Must be 3 characters or more')
-        .matches(/^[0-9]+$/, 'Must be only digits')
-        .required('This field is required'),
       name: Yup.string()
         .min(3, 'Must be 3 characters or more')
         .matches(/^[a-zA-Z0-9 ]*$/, 'Name is incorrect')
@@ -63,22 +54,15 @@ function SignupWidget() {
       password_confirmation: Yup.string()
         .oneOf([Yup.ref('password')], 'Passwords must match')
         .required('This field is required'),
-      document: Yup.mixed().required('This field is required'),
-      ktp_pic: Yup.mixed().required('This field is required'),
-      company: Yup.string().required('This field is required'),
     }),
 
     onSubmit: (values) => {
       setLoading(true);
       registration.mutate({
-        employee_code: values.employee_code,
         email: values.email,
-        name: values.name,
+        fullname: values.name,
         password: values.password,
-        phone: values.no_phone,
-        document: values.document,
-        ktp_pic: values.ktp_pic,
-        company_id: values.company,
+        phone_no: values.no_phone,
       });
     },
   });
@@ -98,23 +82,8 @@ function SignupWidget() {
     }
   }, [registration.isError]);
 
-  const [getCompany, setGetCompany] = useState([]);
-
-  const company = useGetAllCompanyK3s();
-
-  useEffect(() => {
-    if (company.isSuccess) {
-      setGetCompany(company.data.data.kkks_companies);
-    }
-  }, [company.isSuccess]);
-
   const router = useRouter();
-  const [checked, setCheck] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const rememberMe = () => {
-    setCheck(!checked);
-  };
 
   return (
     <div className='w-full'>
@@ -142,30 +111,6 @@ function SignupWidget() {
       <form className='input-area' onSubmit={registrationForm.handleSubmit}>
         <div className='input-item mb-5'>
           <InputCom
-            placeholder={ServeLangItem()?.Employee_Code_Hint}
-            label={ServeLangItem()?.Employee_Code}
-            name='employee_code'
-            type='text'
-            inputClasses='h-[50px]'
-            value={registrationForm.values.employee_code}
-            inputHandler={registrationForm.handleChange}
-            error={
-              registrationForm.values.employee_code !== '' &&
-              registrationForm.errors.employee_code !== undefined
-            }
-            required
-          />
-          {registrationForm.values.employee_code !== '' &&
-          registrationForm.errors.employee_code ? (
-            <span className='mt-1 text-sm text-qred'>
-              {registrationForm.errors.employee_code}
-            </span>
-          ) : (
-            ''
-          )}
-        </div>
-        <div className='input-item mb-5'>
-          <InputCom
             placeholder={ServeLangItem()?.Name}
             label={ServeLangItem()?.Name}
             name='name'
@@ -183,30 +128,6 @@ function SignupWidget() {
           registrationForm.errors.name !== undefined ? (
             <span className='mt-1 text-sm text-qred'>
               {registrationForm.errors.name}
-            </span>
-          ) : (
-            ''
-          )}
-        </div>
-        <div className='input-item mb-5'>
-          <InputSelect
-            placeholder={ServeLangItem()?.Company_Name}
-            label={ServeLangItem()?.Company_Name}
-            name='company'
-            inputClasses='h-[50px]'
-            value={registrationForm.values.company}
-            inputHandler={registrationForm.handleChange}
-            error={
-              registrationForm.values.company !== '' &&
-              registrationForm.errors.company !== undefined
-            }
-            options={getCompany}
-            required
-          />
-          {registrationForm.values.company !== '' &&
-          registrationForm.errors.company !== undefined ? (
-            <span className='mt-1 text-sm text-qred'>
-              {registrationForm.errors.company}
             </span>
           ) : (
             ''
@@ -320,93 +241,11 @@ function SignupWidget() {
             )}
           </div>
         </div>
-        <div className='input-item relative mb-5'>
-          <InputCom
-            label={ServeLangItem()?.Document}
-            name='document'
-            type='file'
-            inputClasses='h-[50px] py-3'
-            onChange={(event) => {
-              const files = event.target.files;
-              registrationForm.setFieldValue('document', files);
-            }}
-            error={
-              registrationForm.values.document !== '' &&
-              registrationForm.errors.document !== undefined
-            }
-            inputHandler={registrationForm.handleChange}
-            required
-          />
-          {registrationForm.values.document !== '' &&
-          registrationForm.errors.document !== undefined ? (
-            <span className='mt-1 text-sm text-qred'>
-              {registrationForm.errors.document}
-            </span>
-          ) : (
-            ''
-          )}
-        </div>
-        <div className='input-item relative mb-5'>
-          <InputCom
-            label={ServeLangItem()?.KTP_Pic}
-            name='ktp_pic'
-            type='file'
-            inputClasses='h-[50px] py-3'
-            onChange={(event) => {
-              const files = event.target.files;
-              registrationForm.setFieldValue('ktp_pic', files);
-            }}
-            error={
-              registrationForm.values.ktp_pic !== '' &&
-              registrationForm.errors.ktp_pic !== undefined
-            }
-            inputHandler={registrationForm.handleChange}
-            required
-          />
-          {registrationForm.values.ktp_pic !== '' &&
-          registrationForm.errors.ktp_pic !== undefined ? (
-            <span className='mt-1 text-sm text-qred'>
-              {registrationForm.errors.ktp_pic}
-            </span>
-          ) : (
-            ''
-          )}
-        </div>
 
-        <div className='forgot-password-area mb-7'>
-          <div className='remember-checkbox flex items-center space-x-2.5 rtl:space-x-reverse'>
-            <button
-              onClick={rememberMe}
-              type='button'
-              className='border-light-gray flex h-5 w-5 items-center justify-center border text-qblack'
-            >
-              {checked && (
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='h-5 w-5'
-                  viewBox='0 0 20 20'
-                  fill='currentColor'
-                >
-                  <path
-                    fillRule='evenodd'
-                    d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-              )}
-            </button>
-            <Link href='/seller-terms-condition'>
-              <span className='cursor-pointer text-base text-black'>
-                {ServeLangItem()?.I_agree_all_terms_and_condition_in_cipcc}
-              </span>
-            </Link>
-          </div>
-        </div>
         <div className='signin-area mb-3'>
           <div className='flex justify-center'>
             <button
               type='submit'
-              disabled={!checked}
               className='black-btn bg-purple flex  h-[50px] w-full items-center justify-center font-semibold disabled:cursor-not-allowed disabled:bg-opacity-50'
             >
               <span className='block text-sm text-white'>

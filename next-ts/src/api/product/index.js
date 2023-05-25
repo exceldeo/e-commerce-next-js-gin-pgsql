@@ -29,6 +29,6 @@ export const useGetProductBySlug = (slug) => {
 };
 
 export const getProductBySlug = async (slug) => {
-  const response = await unauthorizedClient.get('/product/' + slug);
+  const response = await unauthorizedClient.get('/product/slug/' + slug);
   return response.data;
 };

@@ -9,11 +9,7 @@ export default function SallerInfo({ sellerInfo }) {
             {sellerInfo && (
               <Image
                 layout='fill'
-                src={`${
-                  sellerInfo.picture_url
-                    ? sellerInfo.picture_url
-                    : '/assets/images/Group.png'
-                }`}
+                src={`${'/assets/images/Group.png'}`}
                 alt='saller'
                 className='h-full w-full object-cover'
               />
@@ -21,10 +17,12 @@ export default function SallerInfo({ sellerInfo }) {
           </div>
           <div>
             <h6 className='text-[18px] font-medium leading-[30px]'>
-              {sellerInfo.shop_name}
+              {sellerInfo.name}
             </h6>
             <p className='text-[13px] font-normal leading-[30px] text-qgray'>
-              {sellerInfo.address}
+              {sellerInfo.city_name}
+              {', '}
+              {sellerInfo.prov_name}
             </p>
           </div>
         </div>

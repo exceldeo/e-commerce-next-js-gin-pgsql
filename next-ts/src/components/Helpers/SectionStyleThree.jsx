@@ -15,8 +15,9 @@ export default function SectionStyleThree({
       slug: item.slug,
       thumbnail: item.thumbnail ? item.thumbnail : null,
       price: item.price,
-      offer_price: item.offer_price,
       review: parseInt(item.rating_avg || 0),
+      shop: item.shop,
+      category: item.category,
     };
   });
   return (

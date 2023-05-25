@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
 
-import CIPCC from '../../../public/assets/images/CIPCC.png';
-
 function PageHead(props) {
   const { title } = props;
   const { metaDes } = props;
@@ -10,7 +8,7 @@ function PageHead(props) {
     <Head>
       <title>{title}</title>
       <meta name='description' content={metaDes} />
-      <link rel='shortcut icon' type='image/png' href={CIPCC.src} />
+      <link rel='shortcut icon' href={'/favico.svg'} />
     </Head>
   );
 }

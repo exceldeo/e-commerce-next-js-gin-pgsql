@@ -9,7 +9,7 @@ const getAllCategories = async (productQuery) => {
   const query = qs.stringify({
     ...productQuery,
   });
-  const response = await unauthorizedClient.get('category/?' + query);
+  const response = await unauthorizedClient.get('category?' + query);
   return response.data;
 };
 

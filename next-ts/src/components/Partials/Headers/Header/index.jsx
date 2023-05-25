@@ -12,7 +12,6 @@ export default function Header({ drawerAction }) {
 
   return (
     <header className='header-section-wrapper relative print:hidden'>
-      {isAuth && <TopBar contact={null} className='quomodo-shop-top-bar' />}
       <Middlebar className='quomodo-shop-middle-bar hidden lg:block' />
       <div className='quomodo-shop-drawer block h-[60px] w-full border-b-8 border-[#BAFA95] bg-white py-1 lg:hidden'>
         <div className='flex h-full w-full items-center justify-between px-5'>
@@ -33,16 +32,9 @@ export default function Header({ drawerAction }) {
             </svg>
           </div>
 
-          <div className='relative h-full w-[200px]'>
+          <div className='relative h-full w-[200px] text-center '>
             <Link href='/' passHref>
-              <a>
-                <Image
-                  layout='fill'
-                  objectFit='scale-down'
-                  src={SKKMigasIOG.src}
-                  alt='logo'
-                />
-              </a>
+              E-Commerce
             </Link>
           </div>
           {isAuth && (
@@ -52,9 +44,6 @@ export default function Header({ drawerAction }) {
                   <ThinBag />
                 </span>
               </Link>
-              <span className='absolute -top-2.5 -right-2.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-qyellow text-[9px]'>
-                {/* {cartItems ? cartItems.length : 0} */}
-              </span>
             </div>
           )}
         </div>

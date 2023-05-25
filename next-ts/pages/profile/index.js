@@ -6,7 +6,7 @@ import Layout from '../../src/components/Partials/Layout';
 function Index() {
   return (
     <>
-      <PageHead title='CIPCC | Profile' />
+      <PageHead title='Profile' />
       <Layout childrenClasses='pt-0 pb-0'>
         <Profile />
       </Layout>

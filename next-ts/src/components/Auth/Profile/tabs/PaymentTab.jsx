@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 import AddressForm from '../../../AddressForm';
-import AddressList from '../../../AddressList';
+import PaymentList from '../../../PaymentList';
 import ServeLangItem from '../../../Helpers/ServeLangItem';
+import PaymentForm from '../../../PaymentForm';
 
-export default function AddressesTab() {
-  const [newAddress, setNewAddress] = useState(false);
+export default function PaymentTab() {
+  const [newPayment, setNewPayment] = useState(false);
   const [edit, setEdit] = useState(false);
 
   return (
@@ -14,17 +15,17 @@ export default function AddressesTab() {
         <button
           type='button'
           className='yellow-btn rounded'
-          onClick={() => setNewAddress(!newAddress)}
+          onClick={() => setNewPayment(!newPayment)}
         >
           <div className='w-full text-sm font-semibold'>
-            {ServeLangItem()?.Add_New_Address}
+            {ServeLangItem()?.Add_New_Payment}
           </div>
         </button>
       </div>
-      {newAddress ? (
-        <AddressForm toggle={newAddress} setToggle={setNewAddress} />
+      {newPayment ? (
+        <PaymentForm toggle={newPayment} setToggle={setNewPayment} />
       ) : (
-        <AddressList setEdit={setEdit} />
+        <PaymentList />
       )}
     </>
   );

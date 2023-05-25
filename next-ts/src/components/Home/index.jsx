@@ -10,34 +10,26 @@ import { useGetAllProducts } from '../../api/product';
 function Home() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState({
-    products: false,
-    categories: false,
-  });
 
   const getCategories = useGetAllCategories();
 
   useEffect(() => {
     if (getCategories.isSuccess) {
-      setCategories(getCategories.data.data.categories);
-      setIsLoading({ ...isLoading, categories: true });
+      setCategories(getCategories.data.data.datas);
     }
-  }, [getCategories?.data?.data.categories, getCategories.isSuccess]);
+  }, [getCategories?.data?.data.datas, getCategories.isSuccess]);
 
   const getProducts = useGetAllProducts({
-    page_size: 30,
     page: 1,
-    sort: 'created_at',
-    type: 'desc',
+    limit: 16,
+    sort: 'asc',
   });
 
   useEffect(() => {
     if (getProducts.isSuccess) {
-      console.log(getProducts.data.data.datas);
-      // setProducts(getProducts.data.data.products);
-      setIsLoading({ ...isLoading, products: true });
+      setProducts(getProducts.data.data.datas);
     }
-  }, [getProducts?.data?.data.products, getProducts.isSuccess]);
+  }, [getProducts?.data?.data.datas, getProducts.isSuccess]);
 
   return (
     <>
@@ -61,7 +53,7 @@ function Home() {
           </div>
         ) : (
           <>
-            {isLoading.categories ? (
+            {!getCategories.isLoading ? (
               <CategorySection
                 categories={categories}
                 sectionTitle='Categories'
@@ -71,7 +63,7 @@ function Home() {
                 <LoaderStyleTwo />
               </span>
             )}
-            {isLoading.products ? (
+            {!getProducts.isLoading ? (
               <SectionStyleThree
                 products={products.length > 0 ? products : []}
                 sectionTitle='New Arrivals'

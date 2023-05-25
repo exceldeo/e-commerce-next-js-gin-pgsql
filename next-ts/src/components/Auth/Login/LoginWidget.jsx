@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,18 +9,16 @@ import * as Yup from 'yup';
 import InputCom from '../../Helpers/InputCom';
 import LoaderStyleOne from '../../Helpers/Loaders/LoaderStyleOne';
 import ServeLangItem from '../../Helpers/ServeLangItem';
-import { useLogin, useRequestOTP } from '../../../api/auth/login';
+import { useLogin } from '../../../api/auth/login';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function LoginWidget() {
-  const [requsetOtpPage, setRequsetOtpPage] = useState(false);
-
   const login = useLogin();
 
   const loginForm = useFormik({
     initialValues: {
       email: '',
       password: '',
-      otp: '',
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
@@ -32,7 +29,6 @@ function LoginWidget() {
       login.mutate({
         email: values.email,
         password: values.password,
-        otp: values.otp,
       });
     },
   });
@@ -40,7 +36,6 @@ function LoginWidget() {
   useEffect(() => {
     if (login.isSuccess) {
       toast.success('Login Success');
-      setLoading(false);
       router.push('/');
     }
   }, [login.isSuccess]);
@@ -62,50 +57,8 @@ function LoginWidget() {
     }
   }, [login.isError]);
 
-  const requestOtp = useRequestOTP();
-
-  const requestOtpForm = useFormik({
-    initialValues: {
-      email: '',
-    },
-    enableReinitialize: true,
-    validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-    }),
-    onSubmit: (values) => {
-      setLoading(true);
-      requestOtp.mutate({
-        email: values.email,
-      });
-    },
-  });
-
-  useEffect(() => {
-    if (requestOtp.isSuccess) {
-      toast.success('OTP Sent Successfully, Please Check Your Inbox or Spam');
-      setLoading(false);
-      setRequsetOtpPage(true);
-    }
-  }, [requestOtp.isSuccess]);
-
-  useEffect(() => {
-    if (requestOtp.isError) {
-      setLoading(false);
-      if (requestOtp.error.response.data.errcode === '1017') {
-        toast.error('OTP Already Sent, Please Check Your Inbox or Spam');
-        setRequsetOtpPage(true);
-        return;
-      }
-      toast.error(requestOtp.error.response.data.message);
-    }
-  }, [requestOtp.isError]);
-
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [checked, setValue] = useState(false);
-  const rememberMe = () => {
-    setValue(!checked);
-  };
 
   return (
     <div className='w-full'>
@@ -133,42 +86,40 @@ function LoginWidget() {
           </svg>
         </div>
       </div>
-      {!requsetOtpPage ? (
-        <form className='input-area' onSubmit={requestOtpForm.handleSubmit}>
-          <div className='input-item mb-5'>
-            <InputCom
-              placeholder={ServeLangItem()?.Email_or_Phone}
-              label={ServeLangItem()?.Email_or_Phone}
-              name='email'
-              type='text'
-              inputClasses='h-[50px]'
-              value={loginForm.values.email}
-              inputHandler={(e) => {
-                loginForm.setFieldValue('email', e.target.value);
-                requestOtpForm.setFieldValue('email', e.target.value);
-              }}
-              error={
-                loginForm.values.email !== '' &&
-                loginForm.errors.email !== undefined
-              }
-              required
-            />
-          </div>
-          <div className='input-item mb-5'>
-            <InputCom
-              placeholder='* * * * * *'
-              label={ServeLangItem()?.Password}
-              name='password'
-              type='password'
-              inputClasses='h-[50px]'
-              value={loginForm.values.password}
-              inputHandler={loginForm.handleChange}
-              required
-            />
-          </div>
-          <div className='forgot-password-area mb-7 flex items-center justify-between'>
-            <div className='remember-checkbox flex items-center space-x-2.5 rtl:space-x-reverse'>
-              {/* <button
+      <form className='input-area' onSubmit={loginForm.handleSubmit}>
+        <div className='input-item mb-5'>
+          <InputCom
+            placeholder={ServeLangItem()?.Email_or_Phone}
+            label={ServeLangItem()?.Email_or_Phone}
+            name='email'
+            type='text'
+            inputClasses='h-[50px]'
+            value={loginForm.values.email}
+            inputHandler={(e) => {
+              loginForm.setFieldValue('email', e.target.value);
+            }}
+            error={
+              loginForm.values.email !== '' &&
+              loginForm.errors.email !== undefined
+            }
+            required
+          />
+        </div>
+        <div className='input-item mb-5'>
+          <InputCom
+            placeholder='* * * * * *'
+            label={ServeLangItem()?.Password}
+            name='password'
+            type='password'
+            inputClasses='h-[50px]'
+            value={loginForm.values.password}
+            inputHandler={loginForm.handleChange}
+            required
+          />
+        </div>
+        <div className='forgot-password-area mb-7 flex items-center justify-between'>
+          <div className='remember-checkbox flex items-center space-x-2.5 rtl:space-x-reverse'>
+            {/* <button
                 onClick={rememberMe}
                 type='button'
                 className='border-light-gray flex h-5 w-5 items-center justify-center border text-qblack'
@@ -191,66 +142,32 @@ function LoginWidget() {
               <span onClick={rememberMe} className='text-base text-black'>
                 {ServeLangItem()?.Remember_Me}
               </span> */}
-            </div>
-            <Link href='/forgot-password' passhref>
-              <a>
-                <span className='cursor-pointer text-base text-qyellow'>
-                  {ServeLangItem()?.Forgot_password}?
+          </div>
+          <Link href='/forgot-password' passhref>
+            <a>
+              <span className='cursor-pointer text-base text-qyellow'>
+                {ServeLangItem()?.Forgot_password}?
+              </span>
+            </a>
+          </Link>
+        </div>
+        <div className='signin-area mb-3.5'>
+          <div className='flex justify-center'>
+            <button
+              type='submit'
+              className='black-btn bg-purple mb-6 flex h-[50px] w-full items-center justify-center text-sm font-semibold text-white'
+            >
+              <span>{ServeLangItem()?.Login}</span>
+              {loading && (
+                <span className='w-5 ' style={{ transform: 'scale(0.3)' }}>
+                  <LoaderStyleOne />
                 </span>
-              </a>
-            </Link>
+              )}
+            </button>
           </div>
-          <div className='signin-area mb-3.5'>
-            <div className='flex justify-center'>
-              <button
-                type='submit'
-                className='black-btn bg-purple mb-6 flex h-[50px] w-full items-center justify-center text-sm font-semibold text-white'
-              >
-                <span>{ServeLangItem()?.Login}</span>
-                {loading && (
-                  <span className='w-5 ' style={{ transform: 'scale(0.3)' }}>
-                    <LoaderStyleOne />
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-        </form>
-      ) : (
-        <form className='input-area' onSubmit={loginForm.handleSubmit}>
-          <div className='input-item mb-5'>
-            <InputCom
-              placeholder={ServeLangItem()?.OTP_Hint}
-              label={ServeLangItem()?.OTP}
-              name='otp'
-              type='text'
-              inputClasses='h-[50px]'
-              value={loginForm.values.otp}
-              inputHandler={loginForm.handleChange}
-              error={
-                loginForm.values.otp !== '' &&
-                loginForm.errors.otp !== undefined
-              }
-              required
-            />
-          </div>
-          <div className='signin-area mb-3.5'>
-            <div className='flex justify-center'>
-              <button
-                type='submit'
-                className='black-btn bg-purple mb-6 flex h-[50px] w-full items-center justify-center text-sm font-semibold text-white'
-              >
-                <span>{ServeLangItem()?.Sent_OTP}</span>
-                {loading && (
-                  <span className='w-5 ' style={{ transform: 'scale(0.3)' }}>
-                    <LoaderStyleOne />
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-        </form>
-      )}
+        </div>
+      </form>
+
       <div className='signup-area flex justify-center'>
         <p className='text-base font-normal text-qgraytwo'>
           {ServeLangItem()?.Dontt_have_an_account} ?

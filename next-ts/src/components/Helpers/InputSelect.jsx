@@ -40,9 +40,6 @@ export default function InputSelect({
           value={value}
           {...rest}
         >
-          <option value='' disabled selected>
-            Select an option
-          </option>
           {options.map((item, index) => (
             <option key={index} value={item.id}>
               {item.name}

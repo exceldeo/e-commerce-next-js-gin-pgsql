@@ -25,7 +25,7 @@ export default function Drawer({ className, open, action }) {
 
   const getAllCategory = useGetAllCategories();
 
-  const categoryList = getAllCategory?.data?.data.categories;
+  const categoryList = getAllCategory?.data?.data.datas;
 
   return (
     <>
@@ -53,19 +53,11 @@ export default function Drawer({ className, open, action }) {
                     <Link href='/login'>
                       <button
                         type='button'
-                        className='font-600 inline-block h-[42px] w-[100px] bg-yellow-500 p-1 align-middle text-sm text-white '
+                        className='font-600 inline-block h-full h-[42px] w-[100px] rounded-md  bg-green-600 p-1 align-middle text-sm text-white '
                       >
-                        Login KKKS
+                        Login
                       </button>
                     </Link>
-                    <a href='https://test-kkks.cipcc.id/vendor/login'>
-                      <button
-                        type='button'
-                        className='font-600 inline-block h-[42px] w-[100px] bg-green-500 p-1 align-middle text-sm text-white '
-                      >
-                        Login Vendor
-                      </button>
-                    </a>
                   </div>
                 )}
               </div>
@@ -132,15 +124,6 @@ export default function Drawer({ className, open, action }) {
             >
               {ServeLangItem()?.Categories}
             </span>
-            {/* <span className="w-[1px] h-[14px] bg-qgray"></span> */}
-            {/* <span
-              onClick={() => setTab("menu")}
-              className={`text-base font-semibold ${
-                tab === "menu" ? "text-qblack" : "text-qgray "
-              }`}
-            >
-              {ServeLangItem()?.Main_Menu}
-            </span> */}
           </div>
           <div className='category-item mt-5 w-full'>
             <ul className='categories-list'>
@@ -149,7 +132,7 @@ export default function Drawer({ className, open, action }) {
                   <li key={i} className='category-item'>
                     <Link
                       href={{
-                        pathname: '/products',
+                        pathname: '/search',
                         query: { category: item.slug },
                       }}
                     >
@@ -162,8 +145,8 @@ export default function Drawer({ className, open, action }) {
                                 width={20}
                                 height={20}
                                 src={
-                                  `${item.logo}`
-                                    ? `${item.logo}`
+                                  `${item.image}`
+                                    ? `${item.image}`
                                     : `/assets/images/category-1.png`
                                 }
                                 alt='category'

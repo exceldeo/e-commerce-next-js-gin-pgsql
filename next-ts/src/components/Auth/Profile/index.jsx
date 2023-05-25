@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 
 import IcoAdress from './icons/IcoAdress';
 import IcoCart from './icons/IcoCart';
+import IcoPayment from './icons/IcoPayment';
+import IcoSupport from './icons/IcoSupport';
 import IcoLogout from './icons/IcoLogout';
 import IcoPeople from './icons/IcoPeople';
 import AddressesTab from './tabs/AddressesTab';
@@ -17,6 +19,7 @@ import apiRequest from '../../../../utils/apiRequest';
 import auth from '../../../../utils/auth';
 import { useGetAllOrders } from '../../../api/order';
 import { useGetProfile } from '../../../api/profile';
+import PaymentTab from './tabs/PaymentTab';
 
 function Profile() {
   const location = useRouter();
@@ -49,7 +52,7 @@ function Profile() {
 
   const logout = () => {
     if (auth) {
-      apiRequest.logout(auth.token);
+      apiRequest.logout(auth.access_token);
       localStorage.removeItem('auth');
       location.push('/login');
     }
@@ -70,40 +73,10 @@ function Profile() {
               <h1 className='text-[22px] font-bold text-qblack'>
                 {ServeLangItem()?.Welcome_to_your_Profile}
               </h1>
-              {/* {checkSellerAndVendor && (
-                <div className="switch-dashboard flex md:flex-row md:space-x-3 flex-col space-y-3 md:space-y-0 rtl:space-x-reverse rtl:space-x-reverse items-center">
-                  <p className="text-qgray text-base">
-                    {ServeLangItem()?.Switch_Dashboard}
-                  </p>
-                  <button
-                    onClick={switchDashboardHandler}
-                    type="button"
-                    className="w-[73px] h-[31px] border border-[#D9D9D9] rounded-full relative "
-                  >
-                    <div
-                      className={`w-[23px] h-[23px] bg-qblack rounded-full absolute top-[3px] transition-all duration-300 ease-in-out ${
-                        switchDashboard ? "left-[44px]" : "left-[4px]"
-                      }`}
-                    ></div>
-                  </button>
-                </div>
-              )} */}
             </div>
             <div className='profile-wrapper mt-8 w-full rtl:space-x-reverse xl:flex xl:space-x-10'>
               <div className='border-[rgba(0, 0, 0, 0.1)] mb-10 w-full xl:mb-0 xl:min-h-[600px] xl:w-[236px] ltr:xl:border-r rtl:xl:border-l'>
                 <div className='flex flex-row flex-wrap gap-3 rtl:space-x-reverse xl:flex-col xl:gap-0 xl:space-y-10'>
-                  {/* <div className="item group">
-                    <Link href="/profile#dashboard">
-                      <div className="flex space-x-3 rtl:space-x-reverse items-center text-qgray hover:text-qblack capitalize">
-                        <span>
-                          <IcoDashboard />
-                        </span>
-                        <span className=" font-normal text-base capitalize cursor-pointer">
-                          {ServeLangItem()?.Dashboard}
-                        </span>
-                      </div>
-                    </Link>
-                  </div> */}
                   <div className='item group'>
                     <Link href='/profile#profile'>
                       <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
@@ -117,18 +90,18 @@ function Profile() {
                     </Link>
                   </div>
 
-                  {/*<div className="item group">*/}
-                  {/*  <Link href="/profile#payment">*/}
-                  {/*    <div className="flex space-x-3 rtl:space-x-reverse items-center text-qgray hover:text-qblack capitalize">*/}
-                  {/*      <span>*/}
-                  {/*        <IcoPayment />*/}
-                  {/*      </span>*/}
-                  {/*      <span className=" font-normal text-base capitalize cursor-pointer">*/}
-                  {/*        Payment Method*/}
-                  {/*      </span>*/}
-                  {/*    </div>*/}
-                  {/*  </Link>*/}
-                  {/*</div>*/}
+                  <div className='item group'>
+                    <Link href='/profile#payment'>
+                      <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
+                        <span>
+                          <IcoPayment />
+                        </span>
+                        <span className=' cursor-pointer text-base font-normal capitalize'>
+                          Payment Method
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
                   <div className='item group'>
                     <Link href='/profile#order'>
                       <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
@@ -141,18 +114,6 @@ function Profile() {
                       </div>
                     </Link>
                   </div>
-                  {/* <div className="item group">
-                    <Link href="/profile#wishlist">
-                      <div className="flex space-x-3 rtl:space-x-reverse items-center text-qgray hover:text-qblack capitalize">
-                        <span>
-                          <IcoLove />
-                        </span>
-                        <span className=" font-normal text-base capitalize cursor-pointer">
-                          {ServeLangItem()?.Wishlist}
-                        </span>
-                      </div>
-                    </Link>
-                  </div> */}
                   <div className='item group'>
                     <Link href='/profile#address'>
                       <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
@@ -165,42 +126,18 @@ function Profile() {
                       </div>
                     </Link>
                   </div>
-                  {/* <div className="item group">
-                    <Link href="/profile#review">
-                      <div className="flex space-x-3 rtl:space-x-reverse items-center text-qgray hover:text-qblack capitalize">
+                  <div className='item group'>
+                    <Link href='/user/shop/signup'>
+                      <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
                         <span>
-                          <IcoReviewHand />
+                          <IcoSupport />
                         </span>
-                        <span className=" font-normal text-base capitalize cursor-pointer">
-                          {ServeLangItem()?.Reviews}
+                        <span className=' cursor-pointer text-base font-normal capitalize'>
+                          {ServeLangItem()?.Seller_Login}
                         </span>
                       </div>
                     </Link>
-                  </div> */}
-                  {/* <div className="item group">
-                    <Link href="/profile#password">
-                      <div className="flex space-x-3 rtl:space-x-reverse items-center text-qgray hover:text-qblack capitalize">
-                        <span>
-                          <IcoPassword />
-                        </span>
-                        <span className=" font-normal text-base capitalize cursor-pointer">
-                          {ServeLangItem()?.Change_Password}
-                        </span>
-                      </div>
-                    </Link>
-                  </div> */}
-                  {/*<div className="item group">*/}
-                  {/*  <Link href="/profile#support">*/}
-                  {/*    <div className="flex space-x-3 rtl:space-x-reverse items-center text-qgray hover:text-qblack capitalize">*/}
-                  {/*      <span>*/}
-                  {/*        <IcoSupport />*/}
-                  {/*      </span>*/}
-                  {/*      <span className=" font-normal text-base capitalize cursor-pointer">*/}
-                  {/*        Support Ticket*/}
-                  {/*      </span>*/}
-                  {/*    </div>*/}
-                  {/*  </Link>*/}
-                  {/*</div>*/}
+                  </div>
                   <div className='item group'>
                     <div
                       onClick={logout}
@@ -232,6 +169,8 @@ function Profile() {
                     <OrderTab orders={orders} />
                   ) : active === 'address' ? (
                     <AddressesTab />
+                  ) : active === 'payment' ? (
+                    <PaymentTab />
                   ) : (
                     ''
                   )}

@@ -31,16 +31,15 @@ export default function SingleProductPage() {
   }, [getDetailProduct.isSuccess]);
 
   const getAllProductByBrand = useGetAllProducts({
-    brand_id: getDetailProduct.data?.data?.brand?.id,
-    page_size: 5,
+    category: getDetailProduct.data?.data?.category?.slug,
+    limit: 5,
     page: 1,
-    sort: 'created_at',
-    order: 'desc',
+    sort: 'desc',
   });
 
   useEffect(() => {
     if (getAllProductByBrand.isSuccess) {
-      setRelatedProducts(getAllProductByBrand.data.data.products);
+      setRelatedProducts(getAllProductByBrand.data.data.datas);
       setIsLoadingRelatedProducts(false);
     }
   }, [
@@ -49,21 +48,17 @@ export default function SingleProductPage() {
   ]);
 
   const getAllProductByVendor = useGetAllProducts({
-    vendor_id: getDetailProduct.data?.data?.vendor?.id,
-    page_size: 5,
+    shop: getDetailProduct.data?.data?.shop?.username,
+    limit: 5,
     page: 1,
-    sort: 'created_at',
-    order: 'desc',
+    sort: 'desc',
   });
 
   useEffect(() => {
     if (getAllProductByVendor.isSuccess) {
-      setVendorProducts(getAllProductByVendor.data.data.products);
+      setVendorProducts(getAllProductByVendor.data.data.datas);
     }
-  }, [
-    getAllProductByVendor?.data?.data.products,
-    getAllProductByVendor.isSuccess,
-  ]);
+  }, [getAllProductByVendor.isSuccess]);
 
   return (
     <>
@@ -80,8 +75,8 @@ export default function SingleProductPage() {
                       paths={[
                         { name: ServeLangItem()?.home, path: '/' },
                         {
-                          name: getDetailProduct.data.data.product.title,
-                          path: `/single-product?slug=${getDetailProduct.data.data.product.slug}`,
+                          name: getDetailProduct.data.data.title,
+                          path: `/single-product?slug=${getDetailProduct.data.data.slug}`,
                         },
                       ]}
                     />
@@ -95,34 +90,19 @@ export default function SingleProductPage() {
                       <ProductView
                         product={
                           getDetailProduct.data.data &&
-                          getDetailProduct.data.data.product
+                          getDetailProduct.data.data
                         }
                         images={
                           getDetailProduct.data.data &&
-                          getDetailProduct.data.data.product_gallery
+                          getDetailProduct.data.data.product_galleries
                         }
                         vendor={
                           getDetailProduct.data.data &&
-                          getDetailProduct.data.data.vendor
+                          getDetailProduct.data.data.shop
                         }
                         category={
                           getDetailProduct.data.data &&
                           getDetailProduct.data.data.category
-                        }
-                        subCategory={
-                          (getDetailProduct.data.data &&
-                            getDetailProduct.data.data.sub_category) ||
-                          null
-                        }
-                        childCategory={
-                          (getDetailProduct.data.data &&
-                            getDetailProduct.data.data.child_category) ||
-                          null
-                        }
-                        brand={
-                          (getDetailProduct.data.data &&
-                            getDetailProduct.data.data.brand) ||
-                          null
                         }
                       />
                     )}
@@ -170,29 +150,7 @@ export default function SingleProductPage() {
                     {tab === 'des' && (
                       <>
                         <div className='product-detail-des'>
-                          <ul>
-                            <li className='leading-[30px] text-qgray'>
-                              <span className='text-[15px] font-medium capitalize text-qblack'>
-                                {ServeLangItem()?.Tkdn}
-                              </span>
-                              : {getDetailProduct.data.data.product.tkdn}
-                            </li>
-                            <li className='leading-[30px] text-qgray'>
-                              <span className='text-[15px] font-medium capitalize text-qblack'>
-                                {ServeLangItem()?.Weight}
-                              </span>
-                              : {getDetailProduct.data.data.product.weight}{' '}
-                              {getDetailProduct.data.data.product.unit_weight}
-                            </li>
-                            <li className='leading-[30px] text-qgray'>
-                              <span className='text-[15px] font-medium capitalize text-qblack'>
-                                {ServeLangItem()?.Size}
-                              </span>
-                              : {getDetailProduct.data.data.product.size}{' '}
-                              {getDetailProduct.data.data.product.unit_size}
-                            </li>
-                          </ul>
-                          {getDetailProduct.data.data.product.description}
+                          {getDetailProduct.data.data.description}
                         </div>
                       </>
                     )}
@@ -204,7 +162,7 @@ export default function SingleProductPage() {
                       >
                         {getDetailProduct.data.data && (
                           <SallerInfo
-                            sellerInfo={getDetailProduct.data.data.vendor}
+                            sellerInfo={getDetailProduct.data.data.shop}
                           />
                         )}
                       </div>

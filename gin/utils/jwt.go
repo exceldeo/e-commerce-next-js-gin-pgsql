@@ -80,7 +80,7 @@ func CheckAuth(c *gin.Context) {
 
 	token := tokenCheck[1]
 
-	email,role, err := CheckToken(token)
+	email, role, err := CheckToken(token)
 	if err != nil {
 		response.ErrorResponse(c.Writer, err.Error(), http.StatusBadRequest)
 		c.Abort()

@@ -11,8 +11,7 @@ import LoaderStyleTwo from '../Helpers/Loaders/LoaderStyleTwo';
 import Pagination from '../Helpers/Pagination';
 import ServeLangItem from '../Helpers/ServeLangItem';
 import Layout from '../Partials/Layout';
-import { useGetAllBrands } from '../../api/brand';
-import { useGetAllSummarizedCategories } from '../../api/category';
+import { useGetAllCategories } from '../../api/category';
 import { useGetAllProducts } from '../../api/product';
 
 export default function AllProductPage() {
@@ -20,56 +19,32 @@ export default function AllProductPage() {
 
   const [filter, setFilter] = useState({
     category: '',
-    brand: '',
-    price: {
-      min: 0,
-      max: 0,
-    },
     page: 1,
     limit: 2,
-    sort: '',
-    order: 'asc',
+    sort: 'asc',
     keyword: '',
   });
 
-  const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState({});
 
-  const getBrands = useGetAllBrands();
-
-  useEffect(() => {
-    if (getBrands.isSuccess) {
-      setBrands(getBrands.data.data.brands);
-    }
-  }, [getBrands?.data?.data.brands, getBrands.isSuccess]);
-
-  const getCategories = useGetAllSummarizedCategories();
+  const getCategories = useGetAllCategories();
 
   useEffect(() => {
     if (getCategories.isSuccess) {
-      setCategories(getCategories.data.data);
+      setCategories(getCategories.data.data.datas);
     }
   }, [getCategories?.data?.data, getCategories.isSuccess]);
 
   const router = useRouter();
-  const { category, brand, price, page, limit, sort, order, keyword } =
-    router.query;
+  const { category, page, limit, sort, keyword } = router.query;
 
   useEffect(() => {
     if (router.query) {
       setFilter({
         category: category ? category : '',
-        brand: brand ? brand : '',
-        price: price
-          ? {
-              min: price.split(',')[0],
-              max: price.split(',')[1],
-            }
-          : { min: 0, max: 0 },
         page: page ? page : 1,
-        limit: 2,
-        sort: sort ? sort : '',
-        order: order ? order : 'asc',
+        limit: limit ? limit : 16,
+        sort: sort ? sort : 'asc',
         keyword: keyword ? keyword : '',
       });
     }
@@ -79,35 +54,27 @@ export default function AllProductPage() {
 
   let getProducts = useGetAllProducts({
     page: page ? page : 1,
-    page_size: 16,
+    limit: limit,
     sort: sort,
-    type: order,
     keyword: keyword,
-    brand_id: getBrands.data?.data?.brands?.find((item) => item.slug === brand)
-      ?.id,
-    child_category_id: category,
+    category: category,
   });
 
   useEffect(() => {
     if (getProducts.isSuccess) {
-      setProducts(getProducts.data.data.products);
+      setProducts(getProducts.data.data.datas);
     }
-  }, [getProducts?.data?.data.products, getProducts.isSuccess]);
+  }, [getProducts?.data?.data.datas, getProducts.isSuccess]);
 
   const handlerFilter = (filter) => {
-    const { category, brand, price, page, limit, sort, order, keyword } =
-      filter;
+    const { category, page, limit, sort, keyword } = filter;
     router.push({
       pathname: '/search',
       query: {
         category: category ? category : null,
-        brand: brand ? brand : null,
-        price:
-          price.min > 0 && price.max > 0 ? `${price.min},${price.max}` : null,
         page: page > 1 ? page : null,
         limit: limit > 10 ? limit : null,
         sort: sort ? sort : null,
-        order: order ? order : null,
         keyword: keyword ? keyword : null,
       },
     });
@@ -126,9 +93,6 @@ export default function AllProductPage() {
                   setFilter={setFilter}
                   filter={filter}
                   categories={categories}
-                  brands={brands}
-                  priceMax={filter.price.max}
-                  priceMin={filter.price.min}
                   filterToggleHandler={() => setToggle(!filterToggle)}
                   filterToggle={filterToggle}
                   className='mb-[30px]'
@@ -140,30 +104,6 @@ export default function AllProductPage() {
                   <div className='products-sorting mb-[40px] flex w-full flex-col justify-between space-y-5 bg-white p-[30px] md:h-[70px] md:flex-row md:items-center md:space-y-0'>
                     <div>
                       {ServeLangItem()?.Keyword} : {filter.keyword}
-                      {getProducts.data?.data?.total_data > 0 && (
-                        <p className='font-400 text-[13px]'>
-                          <span className='text-qgray'>
-                            {' '}
-                            {ServeLangItem()?.Showing}
-                          </span>{' '}
-                          {getProducts.data.data?.page == 1
-                            ? 1
-                            : getProducts.data.data?.page *
-                                getProducts.data.data?.page_size -
-                              getProducts.data.data?.page_size +
-                              1}{' '}
-                          –{' '}
-                          {getProducts.data.data?.page *
-                            getProducts.data.data?.page_size >
-                          getProducts.data.data?.total_data
-                            ? getProducts.data.data?.total_data
-                            : getProducts.data.data?.page *
-                              getProducts.data.data?.page_size}{' '}
-                          {ServeLangItem()?.Of}{' '}
-                          {getProducts.data.data?.total_data}{' '}
-                          {ServeLangItem()?.results}
-                        </p>
-                      )}
                     </div>
                     <div>
                       <div className='flex items-center space-x-5'>
@@ -173,11 +113,9 @@ export default function AllProductPage() {
                         <div className='relative'>
                           <select
                             value={
-                              filter.sort === 'created_at' &&
-                              filter.order === 'desc'
+                              filter.sort === 'desc'
                                 ? ServeLangItem()?.Newest
-                                : filter.sort === 'created_at' &&
-                                  filter.order === 'asc'
+                                : filter.sort === 'asc'
                                 ? ServeLangItem()?.Oldest
                                 : ''
                             }
@@ -186,8 +124,7 @@ export default function AllProductPage() {
                                 setFilter((prev) => {
                                   const newFilter = {
                                     ...prev,
-                                    sort: 'created_at',
-                                    order: 'desc',
+                                    sort: 'desc',
                                   };
                                   handlerFilter(newFilter);
                                   return newFilter;
@@ -198,8 +135,7 @@ export default function AllProductPage() {
                                 setFilter((prev) => {
                                   const newFilter = {
                                     ...prev,
-                                    sort: 'created_at',
-                                    order: 'asc',
+                                    sort: 'asc',
                                   };
                                   handlerFilter(newFilter);
                                   return newFilter;
@@ -209,7 +145,6 @@ export default function AllProductPage() {
                                   const newFilter = {
                                     ...prev,
                                     sort: '',
-                                    order: '',
                                   };
                                   handlerFilter(newFilter);
                                   return newFilter;
@@ -270,36 +205,6 @@ export default function AllProductPage() {
                               )}
                             </DataIteration>
                           </div>
-                          <Pagination
-                            paginateBackIsDisabled={
-                              getProducts.data?.data?.page === 1
-                            }
-                            paginateNextIsDisabled={
-                              getProducts.data?.data?.page *
-                                getProducts.data?.data?.page_size >=
-                              getProducts.data?.data?.total_data
-                            }
-                            paginateFront={() => {
-                              setFilter((prev) => {
-                                const newFilter = {
-                                  ...prev,
-                                  page: parseInt(prev.page) + 1,
-                                };
-                                handlerFilter(newFilter);
-                                return newFilter;
-                              });
-                            }}
-                            paginateBack={() => {
-                              setFilter((prev) => {
-                                const newFilter = {
-                                  ...prev,
-                                  page: parseInt(prev.page) - 1,
-                                };
-                                handlerFilter(newFilter);
-                                return newFilter;
-                              });
-                            }}
-                          />
                         </>
                       ) : (
                         <div className='mt-5 flex justify-center'>

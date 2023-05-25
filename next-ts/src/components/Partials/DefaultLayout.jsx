@@ -19,7 +19,8 @@ export default function DefaultLayout({ children }) {
   useEffect(() => {
     if (isError) {
       localStorage.removeItem('profile');
-      localStorage.removeItem('token');
+      // localStorage.removeItem('auth');
+      console.log('isError', isError);
     }
   }, [isError]);
 

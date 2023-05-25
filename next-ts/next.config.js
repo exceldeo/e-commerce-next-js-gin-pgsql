@@ -4,12 +4,12 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [`${hostname}`, 'obs.eranyacloud.com'],
+    domains: [`${hostname}`, 'w7.pngwing.com'],
   },
   output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
-  }
+  },
 };
 
 module.exports = nextConfig;

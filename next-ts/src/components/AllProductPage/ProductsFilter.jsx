@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import 'react-input-range/lib/css/index.css';
 
-import BrandFilter from './BrandsFilter';
 import CategoryFilter from './CategoriesFilter';
 
 export default function ProductsFilter({
@@ -11,26 +10,11 @@ export default function ProductsFilter({
   filter,
   filterToggle,
   categories,
-  brands,
   className,
 }) {
   const [filterCategory, setFilterCategory] = useState(
     filter.category ? filter.category : ''
   );
-  const [filterBrand, setFilterBrand] = useState(
-    filter.brand ? filter.brand : ''
-  );
-
-  useEffect(() => {
-    setFilter((prev) => {
-      const newFilter = {
-        ...prev,
-        brand: filterBrand,
-      };
-      handlerFilter(newFilter);
-      return newFilter;
-    });
-  }, [filterBrand]);
 
   useEffect(() => {
     setFilter((prev) => {
@@ -50,12 +34,6 @@ export default function ProductsFilter({
           className || ''
         } ${filterToggle ? 'block' : 'hidden lg:block'}`}
       >
-        <BrandFilter
-          brands={brands}
-          filterBrand={filterBrand}
-          setFilterBrand={setFilterBrand}
-        />
-
         <CategoryFilter
           categories={categories}
           filterCategory={filterCategory}

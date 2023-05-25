@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { authorizedClient } from '../apiClient';
-import auth from '../../../utils/auth';
+import { authorizedClient } from '../../apiClient';
+import auth from '../../../../utils/auth';
 
-const profileKey = 'profile';
+const profileKey = 'shopProfile';
 
 export const useGetProfile = () => {
   const isAuth = auth();
@@ -20,6 +20,6 @@ export const useGetProfile = () => {
 };
 
 const getProfile = async () => {
-  const response = await authorizedClient.get('user/profile');
+  const response = await authorizedClient.get('/shop/profile');
   return response.data;
 };

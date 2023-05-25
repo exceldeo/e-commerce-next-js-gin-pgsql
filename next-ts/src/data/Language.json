@@ -405,6 +405,12 @@
   "Shop": "Shop",
   "List_Product": "List Product",
   "Seller_Menu": "Seller Menu",
+  "Item_Cart_Delete": "Item cart delete",
+  "Add_New_Payment": "Add New Payment",
+  "Card_Number": "Card Number",
+  "Card_Holder_Name": "Card Holder Name",
+  "Bank_Name": "Bank Name",
+  "Payment_Method": "Payment Method",
   "ErrMsg": {
     "not_select_shipping_address": "Please select shipping address",
     "not_select_billing_address": "Please select billing address"

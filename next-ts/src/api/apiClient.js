@@ -19,7 +19,7 @@ const authorizedClient = axios.create({
 });
 
 authorizedClient.interceptors.request.use(async (req) => {
-  const token = JSON.parse(localStorage.getItem('token'));
+  const token = JSON.parse(localStorage.getItem('auth')).access_token;
   if (token) {
     if (req.headers) {
       req.headers.Authorization = `Bearer ${token}`;

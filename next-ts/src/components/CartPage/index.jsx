@@ -9,7 +9,12 @@ import EmptyCardError from '../EmptyCardError';
 import LoaderStyleTwo from '../Helpers/Loaders/LoaderStyleTwo';
 import PageTitle from '../Helpers/PageTitle';
 import ServeLangItem from '../Helpers/ServeLangItem';
-import { useAddToCart, useGetCart } from '../../api/cart';
+import {
+  useAddToCart,
+  useGetCart,
+  useUpdateCart,
+  useDeleteCart,
+} from '../../api/cart';
 import { clearItemCheckout } from '../../store/checkout.js';
 import isAuth from '../../../Middleware/isAuth';
 
@@ -17,32 +22,35 @@ function CartPage() {
   const { checkout } = useSelector((state) => state.checkout);
   const [getCarts, setGetCarts] = useState([]);
   const addToCart = useAddToCart();
+  const updateCart = useUpdateCart();
 
   const serverReqIncreseQty = (id) => {
-    addToCart.mutate({
+    updateCart.mutate({
       id: id,
-      qty: 1,
+      product_id: getCart.data.data.find((item) => item.id === id).product_id,
+      qty: getCart.data.data.find((item) => item.id === id).qty + 1,
     });
   };
 
   const serverReqDecreseQyt = (id) => {
-    addToCart.mutate({
+    updateCart.mutate({
       id: id,
-      qty: -1,
+      product_id: getCart.data.data.find((item) => item.id === id).product_id,
+      qty: getCart.data.data.find((item) => item.id === id).qty - 1,
     });
   };
 
   useEffect(() => {
-    if (addToCart.isSuccess) {
+    if (updateCart.isSuccess) {
       toast.success(ServeLangItem()?.Item_Cart_Update);
     }
-  }, [addToCart.isSuccess]);
+  }, [updateCart.isSuccess]);
 
   useEffect(() => {
-    if (addToCart.isError) {
-      toast.error(addToCart.error.response.data.message);
+    if (updateCart.isError) {
+      toast.error(updateCart.error.response.data.message);
     }
-  }, [addToCart?.error?.response.data.message, addToCart.isError]);
+  }, [updateCart.isError]);
   const getCart = useGetCart();
 
   useEffect(() => {
@@ -62,13 +70,25 @@ function CartPage() {
     }
   }, [getCart]);
 
+  const deleteCart = useDeleteCart();
+
   const handleDelete = (id) => {
-    addToCart.mutate({
+    deleteCart.mutate({
       id: id,
-      qty:
-        getCart.data.data.find((item) => item.product.id === id).cart.qty * -1,
     });
   };
+
+  useEffect(() => {
+    if (deleteCart.isSuccess) {
+      toast.success(ServeLangItem()?.Item_Cart_Delete);
+    }
+  }, [deleteCart.isSuccess]);
+
+  useEffect(() => {
+    if (deleteCart.isError) {
+      toast.error(deleteCart.error.response.data.message);
+    }
+  }, [deleteCart.isError]);
 
   const dispatch = useDispatch();
 

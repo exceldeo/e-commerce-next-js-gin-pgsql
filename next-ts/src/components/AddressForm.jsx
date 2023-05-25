@@ -7,64 +7,47 @@ import InputCom from './Helpers/InputCom';
 import LoaderStyleOne from './Helpers/Loaders/LoaderStyleOne';
 import Selectbox from './Helpers/Selectbox';
 import ServeLangItem from './Helpers/ServeLangItem';
-import {
-  useAddAddress,
-  useEditAddress,
-  useGetAddressById,
-  useGetCity,
-  useGetDistrict,
-  useGetProvince,
-  useGetVillage,
-} from '../api/address';
+import { useAddAddress } from '../api/address';
+import InputSelect from './Helpers/InputSelect';
 
-const AddressForm = ({ toggle, setToggle, edited }) => {
-  const { data } = useGetAddressById(toggle, edited);
-
+const AddressForm = ({ toggle, setToggle }) => {
   const addAddress = useAddAddress();
-  const editAddress = useEditAddress();
   const addressForm = useFormik({
     initialValues: {
-      name: data?.address?.name || '',
-      province: data?.address?.province_code || '',
-      city: data?.address?.city_code || '',
-      district: data?.address?.district_code || '',
-      village: data?.address?.village_code || '',
-      address: data?.address?.address_detail || '',
-      zip_code: data?.address?.zip_code || '',
+      name: '',
+      province_id: '',
+      province: '',
+      city_id: '',
+      city_name: '',
+      address_detail: '',
+      zip_code: '',
+      is_default: true,
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
       name: Yup.string().required('Required'),
+      province_id: Yup.string().required('Required'),
       province: Yup.string().required('Required'),
-      city: Yup.string().required('Required'),
-      district: Yup.string().required('Required'),
-      village: Yup.string().required('Required'),
-      address: Yup.string().required('Required'),
-      zip_code: Yup.string().length(5, 'Must be 5 characters').required(),
+      city_id: Yup.string().required('Required'),
+      city_name: Yup.string().required('Required'),
+      address_detail: Yup.string().required('Required'),
+      zip_code: Yup.string().required('Required'),
     }),
     onSubmit: (values) => {
-      edited
-        ? editAddress.mutate({ ...values, id: toggle })
-        : addAddress.mutate(values);
+      console.log(values);
+      addAddress.mutate(values);
     },
   });
 
   useEffect(() => {
-    if (addAddress.isSuccess || editAddress.isSuccess) {
+    if (addAddress.isSuccess) {
       addressForm.resetForm();
-      toast.success(`Address ${edited ? 'updated' : 'added'} successfully`);
+      toast.success(`Address added successfully`);
       setToggle(!toggle);
     }
-  }, [
-    addAddress.isSuccess,
-    addressForm,
-    editAddress.isSuccess,
-    edited,
-    setToggle,
-    toggle,
-  ]);
+  }, [addAddress.isSuccess, addressForm, setToggle, toggle]);
 
-  if (addAddress.isError || editAddress.isError) {
+  if (addAddress.isError) {
     toast.error(
       addAddress?.Address?.error?.response?.data?.message ||
         addAddress?.Address?.error?.message ||
@@ -73,30 +56,41 @@ const AddressForm = ({ toggle, setToggle, edited }) => {
     );
   }
 
-  const { data: province } = useGetProvince();
-  const { data: city } = useGetCity(addressForm.values.province);
-  const { data: district } = useGetDistrict(addressForm.values.city);
-  const { data: village } = useGetVillage(addressForm.values.district);
+  const provinces = [
+    { id: '1', name: 'Jakarta' },
+    { id: '2', name: 'Jawa Barat' },
+  ];
 
-  const getProvinceName = (code) => {
-    const search = province?.find((item) => item.code === code);
-    return search?.name;
-  };
+  const cities = [
+    { id: '1', name: 'Jakarta Selatan' },
+    { id: '2', name: 'Jakarta Barat' },
+    { id: '3', name: 'Jakarta Timur' },
+    { id: '4', name: 'Jakarta Utara' },
+    { id: '5', name: 'Jakarta Pusat' },
+  ];
 
-  const getCityName = (code) => {
-    const search = city?.find((item) => item.code === code);
-    return search?.name;
-  };
+  useEffect(() => {
+    if (addressForm.values.province_id !== '') {
+      addressForm.setFieldValue(
+        'province',
+        provinces.find((item) => item.id === addressForm.values.province_id)
+          .name
+      );
+    }
+    if (addressForm.values.city_id !== '') {
+      console.log(
+        cities.find((item) => item.id === addressForm.values.city_id)
+      );
+      addressForm.setFieldValue(
+        'city_name',
+        cities.find((item) => item.id === addressForm.values.city_id).name
+      );
+    }
+  }, [addressForm.values.province_id, addressForm.values.city_id]);
 
-  const getDistrictName = (code) => {
-    const search = district?.find((item) => item.code === code);
-    return search?.name;
-  };
-
-  const getVillageName = (code) => {
-    const search = village?.find((item) => item.code === code);
-    return search?.name;
-  };
+  useEffect(() => {
+    console.log(addressForm.values);
+  }, [addressForm.values]);
 
   return (
     <div data-aos='zoom-in' className='w-full'>
@@ -151,233 +145,56 @@ const AddressForm = ({ toggle, setToggle, edited }) => {
             )}
           </div>
 
-          <div className='mb-6 flex items-center space-x-5'>
-            <div className='w-1/2'>
-              <h1 className='input-label mb-2 block  text-[13px] font-normal capitalize text-qgray'>
-                {ServeLangItem()?.Province}*
-              </h1>
-              <div
-                className={`mb-2 flex h-[50px] w-full items-center justify-between border px-5 ${
-                  addressForm.values.province !== '' &&
-                  addressForm.errors.province !== undefined
-                    ? 'border-qred'
-                    : 'border-[#EDEDED]'
-                }`}
-              >
-                <Selectbox
-                  action={(value) => {
-                    addressForm.setFieldValue('province', value.code);
-                  }}
-                  className='w-full'
-                  defaultValue={getProvinceName(addressForm.values.province)}
-                  datas={province}
-                >
-                  {({ item }) => (
-                    <>
-                      <div className='flex w-full items-center justify-between'>
-                        <div>
-                          <span className='text-[13px] text-qblack'>
-                            {item}
-                          </span>
-                        </div>
-                        <span>
-                          <svg
-                            width='11'
-                            height='7'
-                            viewBox='0 0 11 7'
-                            fill='none'
-                            xmlns='http://www.w3.org/2000/svg'
-                          >
-                            <path
-                              d='M5.4 6.8L0 1.4L1.4 0L5.4 4L9.4 0L10.8 1.4L5.4 6.8Z'
-                              fill='#222222'
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </Selectbox>
-              </div>
-              {addressForm.values.province !== '' &&
-              addressForm.errors.province ? (
-                <span className='mt-1 text-sm text-qred'>
-                  {addressForm.errors.province}
-                </span>
-              ) : (
-                ''
-              )}
-            </div>
-            <div className='w-1/2'>
-              <h1 className='input-label mb-2 block  text-[13px] font-normal capitalize text-qgray'>
-                {ServeLangItem()?.City}*
-              </h1>
-              <div
-                className={`mb-2 flex h-[50px] w-full items-center justify-between border px-5 ${
-                  addressForm.values.city !== '' &&
-                  addressForm.errors.city !== undefined
-                    ? 'border-qred'
-                    : 'border-[#EDEDED]'
-                }`}
-              >
-                <Selectbox
-                  action={(value) => {
-                    addressForm.setFieldValue('city', value.code);
-                  }}
-                  className='w-full'
-                  defaultValue={getCityName(addressForm.values.city)}
-                  datas={city}
-                >
-                  {({ item }) => (
-                    <>
-                      <div className='flex w-full items-center justify-between'>
-                        <div>
-                          <span className='text-[13px] text-qblack'>
-                            {item}
-                          </span>
-                        </div>
-                        <span>
-                          <svg
-                            width='11'
-                            height='7'
-                            viewBox='0 0 11 7'
-                            fill='none'
-                            xmlns='http://www.w3.org/2000/svg'
-                          >
-                            <path
-                              d='M5.4 6.8L0 1.4L1.4 0L5.4 4L9.4 0L10.8 1.4L5.4 6.8Z'
-                              fill='#222222'
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </Selectbox>
-              </div>
-              {addressForm.values.city !== '' && addressForm.errors.city ? (
-                <span className='mt-1 text-sm text-qred'>
-                  {addressForm.errors.city}
-                </span>
-              ) : (
-                ''
-              )}
-            </div>
+          <div className='input-item mb-5'>
+            <InputSelect
+              placeholder={ServeLangItem()?.Province}
+              label={ServeLangItem()?.Province}
+              name='province_id'
+              type='text'
+              inputClasses='h-[50px]'
+              value={addressForm.values.province_id}
+              inputHandler={addressForm.handleChange}
+              error={
+                addressForm.values.province_id !== '' &&
+                addressForm.errors.province_id !== undefined
+              }
+              required
+              options={provinces}
+            />
+            {addressForm.values.province_id !== '' &&
+            addressForm.errors.province_id ? (
+              <span classusername='mt-1 text-sm text-qred'>
+                {addressForm.errors.province_id}
+              </span>
+            ) : (
+              ''
+            )}
           </div>
-          <div className='mb-6 flex items-center space-x-5'>
-            <div className='w-1/2'>
-              <h1 className='input-label mb-2 block  text-[13px] font-normal capitalize text-qgray'>
-                {ServeLangItem()?.District}*
-              </h1>
-              <div
-                className={`mb-2 flex h-[50px] w-full items-center justify-between border px-5 ${
-                  addressForm.values.district !== '' &&
-                  addressForm.errors.district !== undefined
-                    ? 'border-qred'
-                    : 'border-[#EDEDED]'
-                }`}
-              >
-                <Selectbox
-                  action={(value) => {
-                    addressForm.setFieldValue('district', value.code);
-                  }}
-                  className='w-full'
-                  defaultValue={getDistrictName(addressForm.values.district)}
-                  datas={district}
-                >
-                  {({ item }) => (
-                    <>
-                      <div className='flex w-full items-center justify-between'>
-                        <div>
-                          <span className='text-[13px] text-qblack'>
-                            {item}
-                          </span>
-                        </div>
-                        <span>
-                          <svg
-                            width='11'
-                            height='7'
-                            viewBox='0 0 11 7'
-                            fill='none'
-                            xmlns='http://www.w3.org/2000/svg'
-                          >
-                            <path
-                              d='M5.4 6.8L0 1.4L1.4 0L5.4 4L9.4 0L10.8 1.4L5.4 6.8Z'
-                              fill='#222222'
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </Selectbox>
-              </div>
-              {addressForm.values.district !== '' &&
-              addressForm.errors.district ? (
-                <span className='mt-1 text-sm text-qred'>
-                  {addressForm.errors.district}
-                </span>
-              ) : (
-                ''
-              )}
-            </div>
-            <div className='w-1/2'>
-              <h1 className='input-label mb-2 block  text-[13px] font-normal capitalize text-qgray'>
-                {ServeLangItem()?.Village}*
-              </h1>
-              <div
-                className={`mb-2 flex h-[50px] w-full items-center justify-between border px-5 ${
-                  addressForm.values.village !== '' &&
-                  addressForm.errors.village !== undefined
-                    ? 'border-qred'
-                    : 'border-[#EDEDED]'
-                }`}
-              >
-                <Selectbox
-                  action={(value) => {
-                    addressForm.setFieldValue('village', value.code);
-                  }}
-                  className='w-full'
-                  defaultValue={getVillageName(addressForm.values.village)}
-                  datas={village}
-                >
-                  {({ item }) => (
-                    <>
-                      <div className='flex w-full items-center justify-between'>
-                        <div>
-                          <span className='text-[13px] text-qblack'>
-                            {item}
-                          </span>
-                        </div>
-                        <span>
-                          <svg
-                            width='11'
-                            height='7'
-                            viewBox='0 0 11 7'
-                            fill='none'
-                            xmlns='http://www.w3.org/2000/svg'
-                          >
-                            <path
-                              d='M5.4 6.8L0 1.4L1.4 0L5.4 4L9.4 0L10.8 1.4L5.4 6.8Z'
-                              fill='#222222'
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </Selectbox>
-              </div>
-              {addressForm.values.village !== '' &&
-              addressForm.errors.village ? (
-                <span className='mt-1 text-sm text-qred'>
-                  {addressForm.errors.village}
-                </span>
-              ) : (
-                ''
-              )}
-            </div>
+          <div className='input-item mb-5'>
+            <InputSelect
+              placeholder={ServeLangItem()?.City}
+              label={ServeLangItem()?.City}
+              name='city_id'
+              type='text'
+              inputClasses='h-[50px]'
+              value={addressForm.values.city_id}
+              inputHandler={addressForm.handleChange}
+              error={
+                addressForm.values.city_id !== '' &&
+                addressForm.errors.city_id !== undefined
+              }
+              required
+              options={cities}
+            />
+            {addressForm.values.city_id !== '' && addressForm.errors.city_id ? (
+              <span classusername='mt-1 text-sm text-qred'>
+                {addressForm.errors.city_id}
+              </span>
+            ) : (
+              ''
+            )}
           </div>
+
           <div className=' mb-6'>
             <div className='w-full'>
               <InputCom
@@ -406,7 +223,7 @@ const AddressForm = ({ toggle, setToggle, edited }) => {
           <div className=' mb-6'>
             <div className='w-full'>
               <InputCom
-                name='address'
+                name='address_detail'
                 value={addressForm.values.address}
                 onChange={addressForm.handleChange}
                 label={ServeLangItem()?.Address + '*'}

@@ -21,81 +21,73 @@ func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory st
 	var products []*models.Product
 	result := &gorm.DB{}
 
-	if slugCategory != "" && usernameShop != "" {
-		result = c.db.
-			Preload("Category",func(db *gorm.DB) *gorm.DB {
-					return db.Where("slug = ?", slugCategory)
-				}).
-			Preload("Shop",func(db *gorm.DB) *gorm.DB {
-					return db.Where("username = ?", usernameShop)
-				  }).
-			Offset(offset).
-			Limit(limit).
-			Order(sort).
-			Where("listing_status = ? and stock > ?", false, 0).
-			Find(&products)
-		if keyword != "" {
-			result = c.db.
-				Preload("Category",func(db *gorm.DB) *gorm.DB {
-						return db.Where("slug = ?", slugCategory)
-					}).
-				Preload("Shop",func(db *gorm.DB) *gorm.DB {
-						return db.Where("username = ?", usernameShop)
-					  }).
-				Offset(offset).
-				Limit(limit).
-				Order(sort).
-				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
-				Find(&products)
-		}
+	var category models.Category
+	var shop models.Shop
 
-	} else if slugCategory != "" {
+	if slugCategory != "" && usernameShop != "" {
+		c.db.Table("categories").Where("slug = ?", slugCategory).Select("id").First(&category)
+		c.db.Table("shops").Where("username = ?", usernameShop).Select("id").Find(&shop)
+
 		result = c.db.
-			Preload("Category",func(db *gorm.DB) *gorm.DB {
-					return db.Where("slug = ?", slugCategory)
-				}).
+			Preload("Category").
 			Preload("Shop").
 			Offset(offset).
 			Limit(limit).
 			Order(sort).
-			Where("listing_status = ? and stock > ?", false, 0).
-			Find(&products)
-
-		if keyword != "" {
-			result = c.db.
-				Preload("Category",func(db *gorm.DB) *gorm.DB {
-						return db.Where("slug = ?", slugCategory)
-					}).
-				Preload("Shop").
-				Offset(offset).
-				Limit(limit).
-				Order(sort).
-				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
-				Find(&products)
-		}
-	} else if usernameShop != "" {
-		result = c.db.
-			Preload("Category").
-			Preload("Shop",
-				func(db *gorm.DB) *gorm.DB {
-				return db.Where("username = ?", usernameShop)
-			}).
-			Offset(offset).
-			Limit(limit).
-			Order(sort).
-			Where("listing_status = ? and stock > ?", false, 0).
+			Where("listing_status = ? and stock > ? and category_id = ? and shop_id = ?", false, 0, category.Id, shop.Id).
 			Find(&products)
 		if keyword != "" {
 			result = c.db.
 				Preload("Category").
-				Preload("Shop",
-					func(db *gorm.DB) *gorm.DB {
-					return db.Where("username = ?", usernameShop)
-				}).
+				Preload("Shop").
 				Offset(offset).
 				Limit(limit).
 				Order(sort).
-				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
+				Where("listing_status = ? and stock > ? and title LIKE ? and category_id = ? and shop_id = ?", false, 0, "%"+keyword+"%",category.Id, shop.Id).
+				Find(&products)
+		}
+
+	} else if slugCategory != "" {
+		c.db.Table("categories").Where("slug = ?", slugCategory).Select("id").Find(&category)
+		
+		result = c.db.
+			Preload("Category").
+			Preload("Shop").
+			Offset(offset).
+			Limit(limit).
+			Order(sort).
+			Where("listing_status = ? and stock > ? and category_id = ? ", false, 0, category.Id).
+			Find(&products)
+
+		if keyword != "" {
+			result = c.db.
+				Preload("Category").
+				Preload("Shop").
+				Offset(offset).
+				Limit(limit).
+				Order(sort).
+				Where("listing_status = ? and stock > ? and title LIKE ? and category_id = ?", false, 0, "%"+keyword+"%", category.Id).
+				Find(&products)
+		}
+	} else if usernameShop != "" {
+		c.db.Table("shops").Where("username = ?", usernameShop).Select("id").Find(&shop)
+
+		result = c.db.
+			Preload("Category").
+			Preload("Shop").
+			Offset(offset).
+			Limit(limit).
+			Order(sort).
+			Where("listing_status = ? and stock > ? and shop_id = ?", false, 0, shop.Id).
+			Find(&products)
+		if keyword != "" {
+			result = c.db.
+				Preload("Category").
+				Preload("Shop").
+				Offset(offset).
+				Limit(limit).
+				Order(sort).
+				Where("listing_status = ? and stock > ? and name LIKE ? and shop_id = ?", false, 0, "%"+keyword+"%", shop.Id).
 				Find(&products)
 		}
 	} else {
@@ -114,7 +106,7 @@ func (c *productRepo) GetAll(sort string, limit int, offset int, slugCategory st
 				Offset(offset).
 				Limit(limit).
 				Order(sort).
-				Where("listing_status = ? and stock > ? and name LIKE ?", false, 0, "%"+keyword+"%").
+				Where("listing_status = ? and stock > ? and title LIKE ?", false, 0, "%"+keyword+"%").
 				Find(&products)
 		}
 	}

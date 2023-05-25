@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function CategorySection({ sectionTitle, categories }) {
   return (
@@ -35,8 +35,8 @@ function CategorySection({ sectionTitle, categories }) {
                               layout='fill'
                               objectFit='scale-down'
                               src={
-                                `${item.logo}`
-                                  ? `${item.logo}`
+                                `${item.image}`
+                                  ? `${item.image}`
                                   : `/assets/images/category-1.png`
                               }
                               alt='category'

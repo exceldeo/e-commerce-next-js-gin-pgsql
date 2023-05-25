@@ -11,34 +11,66 @@ import LoaderStyleOne from '../../Helpers/Loaders/LoaderStyleOne';
 import ServeLangItem from '../../Helpers/ServeLangItem';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { authRole } from '../../../../utils/auth';
+import { useRegistration } from '../../../api/seller/registration';
 
 function SignupWidget() {
+  const isAuth = authRole();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuth) {
+      router.push('/user/shop');
+    }
+  }, []);
+
+  const registerShop = useRegistration();
+
   const registrationForm = useFormik({
     initialValues: {
       name: '',
       username: '',
-      proviceId: '',
-      provice: '',
+      provinceId: '',
+      province: '',
       cityId: '',
       city: '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required('Name is required'),
       username: Yup.string().required('Username is required'),
-      proviceId: Yup.string().required('Province is required'),
-      provice: Yup.string().required('Province is required'),
+      provinceId: Yup.string().required('Province is required'),
+      province: Yup.string().required('Province is required'),
       cityId: Yup.string().required('City is required'),
       city: Yup.string().required('City is required'),
     }),
 
     onSubmit: (values) => {
       setLoading(true);
-      console.log(values);
+      registerShop.mutate({
+        name: values.name,
+        username: values.username,
+        province_id: values.provinceId,
+        prov_name: values.province,
+        city_id: values.cityId,
+        city: values.city,
+      });
     },
   });
 
-  const router = useRouter();
+  if (registerShop.isSuccess) {
+    toast.success(registerShop.data.message);
+    localStorage.removeItem('auth');
+    localStorage.removeItem('profile');
+    router.push('/login');
+  }
+
+  useEffect(() => {
+    if (registerShop.isError) {
+      setLoading(false);
+      toast.error(registerShop.error.response.data.message);
+    }
+  }, [registerShop.isError]);
+
   const [checked, setCheck] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -60,10 +92,11 @@ function SignupWidget() {
   ];
 
   useEffect(() => {
-    if (registrationForm.values.proviceId !== '') {
+    console.log(registrationForm.values);
+    if (registrationForm.values.provinceId !== '') {
       registrationForm.setFieldValue(
-        'provice',
-        provinces.find((item) => item.id === registrationForm.values.proviceId)
+        'province',
+        provinces.find((item) => item.id === registrationForm.values.provinceId)
           .name
       );
     }
@@ -73,18 +106,18 @@ function SignupWidget() {
         cities.find((item) => item.id === registrationForm.values.cityId).name
       );
     }
-  }, [registrationForm.values.proviceId, registrationForm.values.provice]);
+  }, [registrationForm.values.provinceId, registrationForm.values.cityId]);
 
   return (
     <div className='w-full'>
-      <FontAwesomeIcon
-        icon={faTimes}
-        className='absolute top-0 right-0 mt-5 mr-5 cursor-pointer text-qblack'
-        onClick={() => router.back()}
-      />
       <div className='title-area relative mb-7 flex flex-col items-center justify-center text-center'>
+        <Link href='/' passHref>
+          <a className='absolute top-0 left-0 mt-5 ml-5'>
+            <FontAwesomeIcon icon={['fas', 'arrow-left']} />
+          </a>
+        </Link>
         <h1 className='text-[34px] font-bold leading-[74px] text-qblack'>
-          {ServeLangItem()?.Create_Account}
+          {ServeLangItem()?.Create_Seller_Account}
         </h1>
         <div className='shape -mt-6'>
           <svg
@@ -158,22 +191,22 @@ function SignupWidget() {
           <InputSelect
             placeholder={ServeLangItem()?.Province}
             label={ServeLangItem()?.Province}
-            name='proviceId'
+            name='provinceId'
             type='text'
             inputClasses='h-[50px]'
-            value={registrationForm.values.proviceId}
+            value={registrationForm.values.provinceId}
             inputHandler={registrationForm.handleChange}
             error={
-              registrationForm.values.proviceId !== '' &&
-              registrationForm.errors.proviceId !== undefined
+              registrationForm.values.provinceId !== '' &&
+              registrationForm.errors.provinceId !== undefined
             }
             required
             options={provinces}
           />
-          {registrationForm.values.proviceId !== '' &&
-          registrationForm.errors.proviceId ? (
+          {registrationForm.values.provinceId !== '' &&
+          registrationForm.errors.provinceId ? (
             <span classusername='mt-1 text-sm text-qred'>
-              {registrationForm.errors.proviceId}
+              {registrationForm.errors.provinceId}
             </span>
           ) : (
             ''

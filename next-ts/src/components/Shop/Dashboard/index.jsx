@@ -14,6 +14,7 @@ import BreadcrumbCom from '../../BreadcrumbCom';
 import ServeLangItem from '../../Helpers/ServeLangItem';
 import isAuth from '../../../../Middleware/isAuth';
 import apiRequest from '../../../../utils/apiRequest';
+import { useGetProfile } from '../../../api/seller/profile';
 
 function Dashboard() {
   const location = useRouter();
@@ -21,21 +22,22 @@ function Dashboard() {
   const [active, setActive] = useState('dashboard');
   const [dashBoardData, setDashboardData] = useState(null);
   const [profileInfo, setProfile] = useState(null);
+
+  const getShopProfile = useGetProfile();
+
+  useEffect(() => {
+    if (getShopProfile.isSuccess) {
+      setProfile(getShopProfile.data.data);
+    }
+  }, [getShopProfile]);
+
   useEffect(() => {
     setActive(
       getHashContent && getHashContent.length > 1
         ? getHashContent[1]
-        : 'dashboard'
+        : 'profile'
     );
   }, [getHashContent]);
-
-  const logout = () => {
-    if (auth) {
-      apiRequest.logout(auth.token);
-      localStorage.removeItem('auth');
-      location.push('/login');
-    }
-  };
 
   return (
     <div className='w-full '>
@@ -51,7 +53,7 @@ function Dashboard() {
               <div className='border-[rgba(0, 0, 0, 0.1)] mb-10 w-full xl:mb-0 xl:min-h-[600px] xl:w-[236px] ltr:xl:border-r rtl:xl:border-l'>
                 <div className='flex flex-row flex-wrap gap-3 rtl:space-x-reverse xl:flex-col xl:gap-0 xl:space-y-10'>
                   <div className='item group'>
-                    <Link href='/user/dashboard#profile'>
+                    <Link href='/user/shop#profile'>
                       <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
                         <span>
                           <IcoPeople />
@@ -63,7 +65,7 @@ function Dashboard() {
                     </Link>
                   </div>
                   <div className='item group'>
-                    <Link href='/user/dashboard#product'>
+                    <Link href='/user/shop#product'>
                       <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
                         <span>
                           <IcoDashboard />
@@ -75,7 +77,7 @@ function Dashboard() {
                     </Link>
                   </div>
                   <div className='item group'>
-                    <Link href='/user/dashboard#order'>
+                    <Link href='/user/shop#order'>
                       <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
                         <span>
                           <IcoCart />
@@ -87,39 +89,32 @@ function Dashboard() {
                     </Link>
                   </div>
                   <div className='item group'>
-                    <div
-                      onClick={logout}
-                      className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'
-                    >
-                      <span>
-                        <IcoLogout />
-                      </span>
-                      <span className=' cursor-pointer text-base font-normal capitalize'>
-                        {ServeLangItem()?.Logout}
-                      </span>
-                    </div>
+                    <Link href={`/`}>
+                      <div className='flex items-center space-x-3 capitalize text-qgray hover:text-qblack rtl:space-x-reverse'>
+                        <span>
+                          <IcoLogout />
+                        </span>
+                        <span className=' cursor-pointer text-base font-normal capitalize'>
+                          {ServeLangItem()?.Logout}
+                        </span>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               </div>
               <div className='flex-1'>
                 <div className='item-body dashboard-wrapper w-full'>
-                  {/* {active === 'dashboard' ? (
-                    <>
-                      {dashBoardData && (
-                        <Dashboard dashBoardData={dashBoardData} />
-                      )}
-                    </>
-                  ) : active === 'profile' ? (
+                  {active === 'profile' ? (
                     <>
                       {profileInfo && <ProfileTab profileInfo={profileInfo} />}
                     </>
                   ) : active === 'order' ? (
-                    <OrderTab orders={orders} />
-                  ) : active === 'address' ? (
-                    <AddressesTab />
+                    <></>
+                  ) : active === 'product' ? (
+                    <></>
                   ) : (
                     ''
-                  )} */}
+                  )}
                 </div>
               </div>
             </div>
