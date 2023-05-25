@@ -33,7 +33,8 @@ function Home() {
 
   useEffect(() => {
     if (getProducts.isSuccess) {
-      setProducts(getProducts.data.data.products);
+      console.log(getProducts.data.data.datas);
+      // setProducts(getProducts.data.data.products);
       setIsLoading({ ...isLoading, products: true });
     }
   }, [getProducts?.data?.data.products, getProducts.isSuccess]);
