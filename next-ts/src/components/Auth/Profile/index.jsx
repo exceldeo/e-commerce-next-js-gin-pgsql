@@ -27,7 +27,12 @@ function Profile() {
   const [active, setActive] = useState('dashboard');
   const [dashBoardData, setDashboardData] = useState(null);
   const [profileInfo, setProfile] = useState(null);
-  const { data: orders } = useGetAllOrders();
+  const [orderStatus, setOrderStatus] = useState(0);
+
+  const { data: orders } = useGetAllOrders({
+    status: orderStatus,
+  });
+
   useEffect(() => {
     setActive(
       getHashContent && getHashContent.length > 1
