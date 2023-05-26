@@ -5,6 +5,7 @@ import (
 	"e-commerce/module/user"
 	"e-commerce/module/user/delivery/body"
 	"e-commerce/utils"
+	"fmt"
 )
 
 type userUC struct {
@@ -157,6 +158,20 @@ func (u *userUC) AddCart(cart models.Cart, e string) (*models.Cart, error) {
 	}
 
 	cart.UserId = user.Id
+
+	findCart, _ := u.repository.GetCartByProductID(cart.ProductId, cart.UserId)
+
+
+	fmt.Println(findCart.Id)
+
+	if findCart.Id != 0 {
+		findCart.Qty = cart.Qty + findCart.Qty
+		car, err := u.repository.UpdateCart(*findCart)
+		if err != nil {
+			return nil, err
+		}
+		return car, nil
+	}
 
 	car, err := u.repository.AddCart(cart)
 	if err != nil {
@@ -321,6 +336,18 @@ func (u *userUC) AddOrder(order body.OrderRequest, e string) (error) {
 		if err != nil {
 			return  err
 		}
+
+		deleteCart,err := u.repository.GetCartByProductID(op.ProductID, user.Id)
+		if err != nil {
+			return err
+		}
+
+		err = u.repository.DeleteCart(*deleteCart)
+		if err != nil {
+			return err
+		}
+
+
 	}
 
 	orderPayment, err := u.repository.GetPaymentByID(order.OrdersPayment.OrdersPaymentId)

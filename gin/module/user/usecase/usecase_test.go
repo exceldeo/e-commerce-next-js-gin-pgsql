@@ -47,6 +47,18 @@ func (m *mockCategoryRepo) GetCartByUserID(id int) ([]*models.Cart, error) {
 	return []*models.Cart{}, nil
 }
 
+func (m *mockCategoryRepo) GetCartByID(id int) (*models.Cart, error) {
+	return &models.Cart{}, nil
+}
+
+func (m *mockCategoryRepo) GetCartByProductID( productID int,userID int) (*models.Cart, error) {
+	return &models.Cart{}, nil
+}
+
+func (m *mockCategoryRepo) DeleteAllCart(userId int) error {
+	return nil
+}
+
 func (m *mockCategoryRepo) AddCart(cart models.Cart) (*models.Cart, error) {
 	return &models.Cart{}, nil
 }

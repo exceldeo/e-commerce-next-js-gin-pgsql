@@ -13,6 +13,9 @@ type Repository interface {
 	UpdateAddress(address models.Address) (*models.Address, error)
 	DeleteAddress(address models.Address) error
 	GetCartByUserID(id int) ([]*models.Cart, error)
+	GetCartByID(id int) (*models.Cart, error)
+	GetCartByProductID(id int , userID int) (*models.Cart, error)
+	DeleteAllCart(userId int) error 
 	AddCart(cart models.Cart) (*models.Cart, error) 
 	UpdateCart(cart models.Cart) (*models.Cart, error)
 	DeleteCart(cart models.Cart) error

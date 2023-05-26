@@ -160,6 +160,33 @@ func(u *userRepo) GetCartByUserID(id int) ([]*models.Cart, error) {
 	return cart, nil
 }
 
+func(u *userRepo) GetCartByID(id int) (*models.Cart, error) {
+	var cart models.Cart
+
+	result := u.db.
+		Preload("Product").
+		Where("id = ?", id).
+		First(&cart)
+	
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &cart, nil
+}
+
+func(u *userRepo) GetCartByProductID(productId int, userId int) (*models.Cart, error) {
+	var cart models.Cart
+
+	 u.db.
+		Where("product_id = ?", productId).
+		Where("user_id = ?", userId).
+		First(&cart)
+
+	return &cart, nil
+}
+
+
 func(u *userRepo) AddCart(cart models.Cart) (*models.Cart, error) {
 	result := u.db.Create(&cart)
 	if result.Error != nil {
@@ -179,7 +206,16 @@ func(u *userRepo) UpdateCart(cart models.Cart) (*models.Cart, error) {
 }
 
 func(u *userRepo) DeleteCart(cart models.Cart) error {
-	result := u.db.Delete(&cart)
+	result := u.db.Unscoped().Delete(&cart)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func(u *userRepo) DeleteAllCart(userId int) error {
+	result := u.db.Unscoped().Where("user_id = ?", userId).Delete(&models.Cart{})
 	if result.Error != nil {
 		return result.Error
 	}

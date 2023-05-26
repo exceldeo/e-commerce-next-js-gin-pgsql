@@ -48,12 +48,12 @@ export default function ProductsTable({
                     name={item.slug}
                     handleChange={() => {
                       checkout.find(
-                        (checkoutItem) => checkoutItem.id === item.id
+                        (checkoutItem) => checkoutItem.id === item.product_id
                       )
-                        ? dispatch(removeItemCheckout(item.id))
+                        ? dispatch(removeItemCheckout(item.product_id))
                         : dispatch(
                             addItemCheckout({
-                              id: item.id,
+                              id: item.product_id,
                               qty: item.qty,
                               title: item.Product.title,
                               price: item.Product.price,
@@ -63,7 +63,7 @@ export default function ProductsTable({
                     }}
                     checked={
                       checkout.find(
-                        (checkoutItem) => checkoutItem.id === item.id
+                        (checkoutItem) => checkoutItem.id === item.product_id
                       )
                         ? true
                         : false
