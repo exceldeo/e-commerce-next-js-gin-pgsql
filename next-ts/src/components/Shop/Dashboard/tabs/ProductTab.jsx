@@ -40,9 +40,9 @@ export default function ProductTab() {
       price: Yup.string().required('Required'),
       stock: Yup.string().required('Required'),
       thumbnail: Yup.string().required('Required'),
-      listing_status: Yup.string().required('Required'),
     }),
     onSubmit: (values) => {
+      console.log(values);
       edit ? updateProduct.mutate(values) : addProduct.mutate(values);
     },
   });
@@ -51,9 +51,10 @@ export default function ProductTab() {
     if (addProduct.isSuccess) {
       productForm.resetForm();
       toast.success(`Product added successfully`);
-      setNewProduct(!newProduct);
+      setNewProduct(false);
+      setEdit(false);
     }
-  }, [addProduct.isSuccess, productForm, newProduct]);
+  }, [addProduct.isSuccess]);
 
   if (addProduct.isError) {
     toast.error(
@@ -102,6 +103,10 @@ export default function ProductTab() {
   const handleDelete = (id) => {
     deleteProduct.mutate(id);
   };
+
+  useEffect(() => {
+    console.log(productForm.values);
+  }, [productForm.values]);
 
   return (
     <>

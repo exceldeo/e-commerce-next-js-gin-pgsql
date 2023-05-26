@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { authorizedClient } from '../../apiClient';
 
@@ -27,37 +27,30 @@ export const getProductById = async (id) => {
 };
 
 export const useAddProduct = () => {
+  const queryClient = useQueryClient();
   return useMutation(
-    async ({
-      category_id,
-      title,
-      description,
-      thumbnail,
-      stock,
-      price,
-      listring_status,
-    }) => {
+    async ({ category_id, title, description, thumbnail, stock, price }) => {
       const response = await authorizedClient.post('/shop/product', {
-        category_id,
+        category_id: parseInt(category_id),
         title,
         description,
         thumbnail,
         stock: parseInt(stock),
-        price,
-        listring_status,
+        price: parseInt(price),
+        listring_status: false,
       });
       return response.data;
     },
     {
       onSuccess: () => {
         void queryClient.invalidateQueries([profileKey]);
-        getAllProducts();
       },
     }
   );
 };
 
 export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
   return useMutation(
     async ({
       id,
@@ -83,13 +76,13 @@ export const useUpdateProduct = () => {
     {
       onSuccess: () => {
         void queryClient.invalidateQueries([profileKey]);
-        getAllProducts();
       },
     }
   );
 };
 
 export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
   return useMutation(
     async (data) => {
       console.log(data);
@@ -98,7 +91,7 @@ export const useDeleteProduct = () => {
     },
     {
       onSuccess: () => {
-        getAllProducts();
+        void queryClient.invalidateQueries([profileKey]);
       },
     }
   );
