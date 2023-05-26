@@ -57,6 +57,7 @@ export default function ProductsTable({
                               qty: item.qty,
                               title: item.Product.title,
                               price: item.Product.price,
+                              shop_id: item.Product.shop_id,
                             })
                           );
                     }}

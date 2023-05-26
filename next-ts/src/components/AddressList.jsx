@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import ServeLangItem from './Helpers/ServeLangItem';
 import { useGetAddress } from '../api/address';
 
-const AddressList = ({ selected, setSelected, setEdit }) => {
+const AddressList = ({ selected, setSelected }) => {
   const [defaultAddress, setDefaultAddress] = useState(null);
 
   const { data, isSuccess } = useGetAddress();

@@ -9,20 +9,41 @@ import AddressForm from '../AddressForm';
 import AddressList from '../AddressList';
 import PageTitle from '../Helpers/PageTitle';
 import ServeLangItem from '../Helpers/ServeLangItem';
-import { useAddAddress } from '../../api/address';
+import { useAddAddress, useGetAddress } from '../../api/address';
 import { useCreateOrder } from '../../api/order';
 import isAuth from '../../../Middleware/isAuth';
 import { formatMoney } from '../../../utils/formatMoney.ts';
 import wordCount from '../../../utils/wordCount';
+import { useGetPayment } from '../../api/payment';
+import PaymentList from '../PaymentList';
 
 function CheckoutPage() {
-  const [activeAddress, setActiveAddress] = useState('billing');
-  const [newAddress, setNewAddress] = useState(false);
-  const [editAddress, setEditAddress] = useState(false);
+  const [selectedPayment, setPayment] = useState(null);
   const [selectedShipping, setShipping] = useState(null);
-  const [selectedBilling, setBilling] = useState(null);
   const router = useRouter();
   const { checkout } = useSelector((state) => state.checkout);
+
+  const { data, isSuccess } = useGetAddress();
+
+  useEffect(() => {
+    if (isSuccess) {
+      const address = data?.find((address) => address?.is_default === true);
+
+      setShipping(address);
+    }
+  }, [isSuccess, data]);
+
+  const { dataPayment, isSuccessPayment } = useGetPayment();
+
+  useEffect(() => {
+    if (isSuccessPayment) {
+      const payment = dataPayment?.find(
+        (payment) => payment?.is_default === true
+      );
+
+      setPayment(payment);
+    }
+  }, [isSuccessPayment, dataPayment]);
 
   const countSubTotal = useCallback(() => {
     if (checkout.length > 0) {
@@ -33,45 +54,6 @@ function CheckoutPage() {
     return 0;
   }, [checkout]);
 
-  const addAddress = useAddAddress();
-  const newAddressForm = useFormik({
-    initialValues: {
-      name: '',
-      province: '',
-      city: '',
-      district: '',
-      village: '',
-      address: '',
-      zip_code: '',
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required('Required'),
-      province: Yup.string().required('Required'),
-      city: Yup.string().required('Required'),
-      district: Yup.string().required('Required'),
-      village: Yup.string().required('Required'),
-      address: Yup.string().required('Required'),
-      zip_code: Yup.string().length(5, 'Must be 5 characters').required(),
-    }),
-    onSubmit: (values) => {
-      addAddress.mutate(values);
-    },
-  });
-
-  useEffect(() => {
-    if (addAddress.isSuccess) {
-      newAddressForm.resetForm();
-      toast.success('Address added successfully');
-      setNewAddress(!newAddress);
-    }
-  }, [addAddress.isSuccess, newAddress, newAddressForm]);
-
-  if (addAddress.isError) {
-    toast.error(
-      addAddress?.error?.response?.data?.message ?? addAddress.error.message
-    );
-  }
-
   const createOrder = useCreateOrder();
 
   const createOrderHandler = () => {
@@ -80,41 +62,19 @@ function CheckoutPage() {
       return;
     }
 
-    if (!selectedBilling) {
-      toast.error(ServeLangItem()?.ErrMsg.not_select_billing_address);
-      return;
-    }
-
     createOrder.mutate({
-      order_items: checkout.map((item) => ({
-        product_id: item.id,
+      shop_id: parseInt(checkout[0]?.shop_id),
+      status: 0,
+      orders_product: checkout.map((item) => ({
+        product_id: parseInt(item.id),
         quantity: item.qty,
-        notes: 'notes',
       })),
-      term_of_sales: 'exw',
-      subject: 'test',
-      province_code: selectedShipping.province_code,
-      city_code: selectedShipping.city_code,
-      district_code: selectedShipping.district_code,
-      village_code: selectedShipping.village_code,
-      zip_code: selectedShipping.zip_code,
-      latitude: 0,
-      longitude: 0,
-      address_detail: selectedShipping.address_detail,
-      name: selectedShipping.name,
-      shipping_name: selectedBilling.name,
-      shipping_phone: '08123456789',
-      invoice_province_code: selectedBilling.province_code,
-      invoice_city_code: selectedBilling.city_code,
-      invoice_district_code: selectedBilling.district_code,
-      invoice_village_code: selectedBilling.village_code,
-      invoice_zip_code: selectedBilling.zip_code,
-      invoice_latitude: 0,
-      invoice_longitude: 0,
-      invoice_address_detail: selectedBilling.address_detail,
-      invoice_name: selectedBilling.name,
-      invoice_shipping_name: selectedBilling.name,
-      invoice_shipping_phone: '08123456789',
+      orders_payment: {
+        orders_payment_id: parseInt(selectedPayment?.id),
+      },
+      orders_address: {
+        shipping_address_id: parseInt(selectedShipping?.id),
+      },
     });
   };
 
@@ -148,67 +108,21 @@ function CheckoutPage() {
                 <h1 className='mt-5 mb-5 text-xl font-medium text-qblack sm:text-2xl'>
                   {ServeLangItem()?.Addresses}
                 </h1>
-                {newAddress ? (
-                  <AddressForm toggle={newAddress} setToggle={setNewAddress} />
-                ) : editAddress ? (
-                  <AddressForm
-                    toggle={editAddress}
-                    setToggle={setEditAddress}
-                    edited
-                  />
-                ) : (
-                  <div className='addresses-widget w-full'>
-                    <div className='mb-5 w-full items-center justify-between sm:flex'>
-                      <div className='rounded border border-qyellow bg-[#FFFAEF] p-2'>
-                        <button
-                          onClick={() => setActiveAddress('billing')}
-                          type='button'
-                          className={`text-md rounded-md px-4 py-3 font-medium  ${
-                            activeAddress === 'billing'
-                              ? 'bg-qyellow text-qblack'
-                              : 'text-qyellow'
-                          } `}
-                        >
-                          {ServeLangItem()?.Billing_Address}
-                        </button>
-                        <button
-                          onClick={() => setActiveAddress('shipping')}
-                          type='button'
-                          className={`text-md ml-1 rounded-md px-4 py-3 font-medium ${
-                            activeAddress === 'shipping'
-                              ? 'bg-qyellow text-qblack'
-                              : 'text-qyellow'
-                          } `}
-                        >
-                          {ServeLangItem()?.Shipping_Address}
-                        </button>
-                      </div>
 
-                      <button
-                        onClick={() => setNewAddress(!newAddress)}
-                        type='button'
-                        className='mt-2 h-[40px] w-[100px] border border-qblack transition-all duration-300 ease-in-out hover:bg-qblack hover:text-white sm:mt-0'
-                      >
-                        <span className='text-sm font-semibold'>
-                          {ServeLangItem()?.Add_New}
-                        </span>
-                      </button>
-                    </div>
-                    {activeAddress === 'billing' ? (
-                      <AddressList
-                        selected={selectedBilling}
-                        setSelected={setBilling}
-                        setEdit={setEditAddress}
-                      />
-                    ) : (
-                      <AddressList
-                        selected={selectedShipping}
-                        setSelected={setShipping}
-                        setEdit={setEditAddress}
-                      />
-                    )}
+                <div className='addresses-widget w-full'>
+                  <div className='mb-5 w-full items-center justify-between sm:flex'></div>
+                  <AddressList />
+                </div>
+                <div className='w-full'>
+                  <h1 className='mt-5 mb-5 text-xl font-medium text-qblack sm:text-2xl'>
+                    Payment
+                  </h1>
+
+                  <div className='addresses-widget w-full'>
+                    <div className='mb-5 w-full items-center justify-between sm:flex'></div>
+                    <PaymentList />
                   </div>
-                )}
+                </div>
               </div>
               <div className='flex-1'>
                 <h1 className='mt-5 mb-5 text-xl font-medium text-qblack sm:text-2xl'>
