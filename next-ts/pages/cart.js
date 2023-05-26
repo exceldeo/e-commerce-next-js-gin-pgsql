@@ -7,7 +7,7 @@ import Layout from '../src/components/Partials/Layout';
 function cart() {
   return (
     <>
-      <PageHead title='CIPCC | Cart' />
+      <PageHead title='Cart' />
       <Layout>
         <CartPage />
       </Layout>
