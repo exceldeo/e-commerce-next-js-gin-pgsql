@@ -110,7 +110,7 @@ function Dashboard() {
                       {profileInfo && <ProfileTab profileInfo={profileInfo} />}
                     </>
                   ) : active === 'order' ? (
-                    <></>
+                    <OrderTab />
                   ) : active === 'product' ? (
                     <ProductTab />
                   ) : (
