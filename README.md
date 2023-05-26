@@ -27,6 +27,9 @@ go mod tidy
 go run main.go
 ```
 
+dokumentasi api bisa di lihat di 
+https://documenter.getpostman.com/view/11566293/2s93m7VgE5
+
 ## WEB
 
 Jalankan perintah di bawah di folder aplikasi:
