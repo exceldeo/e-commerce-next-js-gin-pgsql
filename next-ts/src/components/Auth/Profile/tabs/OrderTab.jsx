@@ -6,9 +6,11 @@ import { useGetAllOrders } from '../../../../api/order';
 import ServeLangItem from '../../../Helpers/ServeLangItem';
 
 const status = [
-  { key: 'requested', value: 'Requested' },
-  { key: 'confirmed', value: 'Confirmed' },
-  { key: 'po_accepted', value: 'PO Accepted' },
+  { key: 0, value: 'Waiting for payment' },
+  { key: 1, value: 'Requested' },
+  { key: 2, value: 'Rejected' },
+  { key: 3, value: 'Delived' },
+  { key: 4, value: 'Completed' },
 ];
 
 export default function OrderTab() {
@@ -35,9 +37,6 @@ export default function OrderTab() {
           <tbody>
             {/* table heading */}
             <tr className='default-border-bottom whitespace-nowrap border-b px-2 text-base text-qgray '>
-              <td className='block whitespace-nowrap py-4 text-center'>
-                {ServeLangItem()?.Order}
-              </td>
               <td className='whitespace-nowrap py-4 text-center'>
                 {ServeLangItem()?.Date}
               </td>
@@ -50,27 +49,34 @@ export default function OrderTab() {
             </tr>
             {/* table heading end */}
             {orders &&
-              orders.data.orders.length > 0 &&
-              orders.data.orders.map((item, i) => (
+              orders.data.datas.length > 0 &&
+              orders.data.datas.map((item, i) => (
                 <tr key={i} className='border-b bg-white hover:bg-gray-50'>
-                  <td className='py-4 text-center'>
-                    <span className='text-lg font-medium text-qgray'>
-                      {item.purchase_code}
-                    </span>
-                  </td>
                   <td className='py-4 px-2 text-center'>
                     <span className='whitespace-nowrap text-base  text-qgray'>
                       {DateFormat(item.created_at)}
                     </span>
                   </td>
                   <td className='py-4 px-2 text-center'>
-                    {item.status === 'requested' ? (
+                    {item.status === 0 ? (
                       <span className='rounded bg-green-100 p-2 text-sm text-green-500'>
-                        {item.status}
+                        Waiting for payment
+                      </span>
+                    ) : item.status === 1 ? (
+                      <span className='rounded bg-yellow-100 p-2 text-sm text-yellow-500'>
+                        Requested
+                      </span>
+                    ) : item.status === 2 ? (
+                      <span className='rounded bg-red-100 p-2 text-sm text-white'>
+                        Rejected
+                      </span>
+                    ) : item.status === 3 ? (
+                      <span className='rounded bg-green-100 p-2 text-sm text-green-500'>
+                        Delived
                       </span>
                     ) : (
-                      <span className='rounded bg-yellow-100 p-2 text-sm text-yellow-500'>
-                        {item.status}
+                      <span className='rounded bg-green-100 p-2 text-sm text-green-500'>
+                        Completed
                       </span>
                     )}
                   </td>

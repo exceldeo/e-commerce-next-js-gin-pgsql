@@ -322,7 +322,12 @@ func (h *ShopHandler) GetAllOrder(c *gin.Context) {
 	pgn := &pagination.Pagination{}
 	h.ValidateQueryPagination(c, pgn)
 
-	status, _ := strconv.Atoi(c.Query("status"))
+	status, err := strconv.Atoi(c.Query("status"))
+
+	if err != nil {
+		status = 0
+	}
+
 
 	orders, err := h.usecase.GetAllOrderByUserEmail(email, pgn.GetSort(), pgn.GetLimit(), pgn.GetOffset(), status)
 	if err != nil {

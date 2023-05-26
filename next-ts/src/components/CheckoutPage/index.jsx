@@ -33,10 +33,12 @@ function CheckoutPage() {
     }
   }, [isSuccess, data]);
 
-  const { dataPayment, isSuccessPayment } = useGetPayment();
+  const { data: dataPayment, isSuccessPayment } = useGetPayment();
+  const dataPayment2 = useGetPayment();
 
   useEffect(() => {
     if (isSuccessPayment) {
+      console.log(dataPayment2, ' dataPayment2');
       const payment = dataPayment?.find(
         (payment) => payment?.is_default === true
       );
@@ -62,6 +64,13 @@ function CheckoutPage() {
       return;
     }
 
+    console.log(selectedPayment);
+
+    if (!selectedPayment) {
+      toast.error("You haven't selected a payment method");
+      return;
+    }
+
     createOrder.mutate({
       shop_id: parseInt(checkout[0]?.shop_id),
       status: 0,
@@ -73,7 +82,7 @@ function CheckoutPage() {
         orders_payment_id: parseInt(selectedPayment?.id),
       },
       orders_address: {
-        shipping_address_id: parseInt(selectedShipping?.id),
+        orders_address_id: parseInt(selectedShipping?.id),
       },
     });
   };

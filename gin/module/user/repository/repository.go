@@ -330,8 +330,7 @@ func(u *userRepo) GetProductByID(id int) (*models.Product, error) {
 	var product models.Product
 
 	result := u.db.
-		Where("id = ?", id).
-		Find(&product)
+		First(&product,id)
 	
 	if result.Error != nil {
 		return nil, result.Error

@@ -48,6 +48,6 @@ export const useGetOrderById = (id) => {
 };
 
 const getOrderById = async (id) => {
-  const response = await authorizedClient.get('/order/' + id);
+  const response = await authorizedClient.get('/user/order/' + id);
   return response.data;
 };
