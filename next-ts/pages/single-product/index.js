@@ -4,7 +4,7 @@ import SingleProductPage from '../../src/components/SingleProductPage';
 const SingleProduct = () => {
   return (
     <>
-      <PageHead title='CIPCC | Product Detail' />
+      <PageHead title='Product Detail' />
       <SingleProductPage />
     </>
   );

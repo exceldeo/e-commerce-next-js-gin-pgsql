@@ -6,7 +6,7 @@ import PageHead from '../src/components/Helpers/PageHead';
 export default function login() {
   return (
     <>
-      <PageHead title='CIPCC | Login' />
+      <PageHead title='Login' />
       <Login />
     </>
   );

@@ -5,7 +5,7 @@ import PageHead from '../src/components/Helpers/PageHead.jsx';
 const signupPage = () => {
   return (
     <>
-      <PageHead title='CIPCC | signup' />
+      <PageHead title='signup' />
       <Signup />
     </>
   );
