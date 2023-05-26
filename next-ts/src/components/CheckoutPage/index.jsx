@@ -33,12 +33,10 @@ function CheckoutPage() {
     }
   }, [isSuccess, data]);
 
-  const { data: dataPayment, isSuccessPayment } = useGetPayment();
-  const dataPayment2 = useGetPayment();
+  const { data: dataPayment, isSuccess: isSuccessPayment } = useGetPayment();
 
   useEffect(() => {
     if (isSuccessPayment) {
-      console.log(dataPayment2, ' dataPayment2');
       const payment = dataPayment?.find(
         (payment) => payment?.is_default === true
       );
@@ -63,8 +61,6 @@ function CheckoutPage() {
       toast.error(ServeLangItem()?.ErrMsg.not_select_shipping_address);
       return;
     }
-
-    console.log(selectedPayment);
 
     if (!selectedPayment) {
       toast.error("You haven't selected a payment method");
@@ -93,10 +89,6 @@ function CheckoutPage() {
       router.push('/');
     }
   }, [createOrder.isSuccess, router]);
-
-  useEffect(() => {
-    console.log(checkout);
-  }, [checkout]);
 
   return (
     <>
