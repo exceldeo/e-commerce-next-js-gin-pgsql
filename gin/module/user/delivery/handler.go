@@ -482,8 +482,7 @@ func (h *UserHandler) GetAllOrder (c *gin.Context){
 
 	status, err := strconv.Atoi(c.Query("status"))
 	if err != nil {
-		response.ErrorResponse(c.Writer, err.Error(), http.StatusBadRequest)
-		return
+		status = 0
 	}
 
 	orders, err := h.usecase.GetAllOrderByUserEmail(email, pgn.GetSort(), pgn.GetLimit(), pgn.GetOffset(), status)

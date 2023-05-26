@@ -1,0 +1,81 @@
+import { HomepageCategory } from '../../types/api/homePage';
+
+export const categoriesData: HomepageCategory[] = [
+  {
+    id: 1,
+    name: 'Electronics',
+    slug: 'electronics',
+    icon: 'fas fa-anchor',
+    image: 'uploads/custom-images/electronics-2022-11-19-02-48-28-5548.png',
+  },
+  {
+    id: 2,
+    name: 'Game',
+    slug: 'game',
+    icon: 'fas fa-gamepad',
+    image: 'uploads/custom-images/game-2022-11-19-02-48-48-6382.png',
+  },
+  {
+    id: 3,
+    name: 'Mobile',
+    slug: 'mobile',
+    icon: 'fas fa-mobile-alt',
+    image: 'uploads/custom-images/mobile-2022-11-19-02-49-20-2538.png',
+  },
+  {
+    id: 4,
+    name: 'Lifestyle',
+    slug: 'lifestyle',
+    icon: 'fas fa-home',
+    image: 'uploads/custom-images/lifestyle-2022-11-19-02-49-38-3139.png',
+  },
+  {
+    id: 5,
+    name: 'Babies & Toys',
+    slug: 'babies-toys',
+    icon: 'fas fa-basketball-ball',
+    image: 'uploads/custom-images/babies-toys-2022-11-19-02-50-00-3811.png',
+  },
+  {
+    id: 6,
+    name: 'Bike',
+    slug: 'bike',
+    icon: 'fas fa-bicycle',
+    image: 'uploads/custom-images/bike-2022-11-19-02-50-18-4648.png',
+  },
+  {
+    id: 7,
+    name: "Men's Fasion",
+    slug: 'mens-fasion',
+    icon: 'fas fa-street-view',
+    image: 'uploads/custom-images/mens-fasion-2022-11-19-02-50-39-5203.png',
+  },
+  {
+    id: 8,
+    name: 'Woman Fashion',
+    slug: 'woman-fashion',
+    icon: 'fab fa-android',
+    image: 'uploads/custom-images/womans-fasion-2022-11-19-02-52-58-2850.png',
+  },
+  {
+    id: 9,
+    name: 'Talevision',
+    slug: 'talevision',
+    icon: 'fas fa-adjust',
+    image: null,
+  },
+  {
+    id: 10,
+    name: 'Accessories',
+    slug: 'accessories',
+    icon: 'fas fa-cogs',
+    image: null,
+  },
+  {
+    id: 11,
+    name: 'John Doe',
+    slug: 'john-doe',
+    icon: 'fas fa-adjust',
+    image: 'uploads/custom-images/john-doe-2022-11-17-12-00-23-1751.jpg',
+  },
+];

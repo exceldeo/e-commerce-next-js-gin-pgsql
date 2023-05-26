@@ -30,8 +30,8 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Access-Control-Allow-Origin")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
@@ -81,12 +81,12 @@ func handleRequests() {
 			auth.POST("/login", userDelivery.Login)
 		}
 		{
-			category.GET("/", categoryDelivery.GetAll)
+			category.GET("", categoryDelivery.GetAll)
 			category.GET("/:id", categoryDelivery.GetByID)
 			category.GET("/slug/:slug", categoryDelivery.GetBySlug)
 		}
 		{
-			product.GET("/", productDelivery.GetAll)
+			product.GET("", productDelivery.GetAll)
 			product.GET("/:id", productDelivery.GetByID)
 			product.GET("/slug/:slug", productDelivery.GetBySlug)
 		}
@@ -95,31 +95,31 @@ func handleRequests() {
 			user.GET("/profile", userDelivery.GetProfile)
 			address := user.Group("/address")
 			{
-				address.GET("/", userDelivery.GetAddress)
+				address.GET("", userDelivery.GetAddress)
 				address.GET("/:id", userDelivery.GetDetailAddress)
-				address.POST("/", userDelivery.AddAddress)
+				address.POST("", userDelivery.AddAddress)
 				address.PUT("/:id", userDelivery.UpdateAddress)
 				address.DELETE("/:id", userDelivery.DeleteAddress)
 			}
 			cart := user.Group("/cart")
 			{
-				cart.GET("/", userDelivery.GetCart)
-				cart.POST("/", userDelivery.AddCart)
+				cart.GET("", userDelivery.GetCart)
+				cart.POST("", userDelivery.AddCart)
 				cart.PUT("/:id", userDelivery.UpdateCart)
 				cart.DELETE("/:id", userDelivery.DeleteCart)
 			}
 			payment := user.Group("/payment")
 			{
-				payment.GET("/", userDelivery.GetPayment)
-				payment.POST("/", userDelivery.AddPayment)
+				payment.GET("", userDelivery.GetPayment)
+				payment.POST("", userDelivery.AddPayment)
 				payment.PUT("/:id", userDelivery.UpdatePayment)
 				payment.DELETE("/:id", userDelivery.DeletePayment)
 			}
 			order := user.Group("/order")
 			{
-				order.GET("/", userDelivery.GetAllOrder)
+				order.GET("", userDelivery.GetAllOrder)
 				order.GET("/:id", userDelivery.GetDetailOrder)
-				order.POST("/", userDelivery.AddOrder)
+				order.POST("", userDelivery.AddOrder)
 				order.PUT("/:id", userDelivery.UpdateOrder)
 			}
 		}
@@ -129,15 +129,15 @@ func handleRequests() {
 			shop.POST("/register", shopDelivery.Register)
 			product := shop.Group("/product")
 			{
-				product.GET("/", shopDelivery.GetAllProductShop)
+				product.GET("", shopDelivery.GetAllProductShop)
 				product.GET("/:id", shopDelivery.GetDetailProductShop)
-				product.POST("/", shopDelivery.AddProduct)
+				product.POST("", shopDelivery.AddProduct)
 				product.PUT("/:id", shopDelivery.UpdateProduct)
 				product.DELETE("/:id", shopDelivery.DeleteProduct)
 			}
 			order := shop.Group("/order")
 			{
-				order.GET("/", shopDelivery.GetAllOrder)
+				order.GET("", shopDelivery.GetAllOrder)
 				order.GET("/:id", shopDelivery.GetDetailOrder)
 				order.PUT("/:id", shopDelivery.UpdateOrder)
 			}

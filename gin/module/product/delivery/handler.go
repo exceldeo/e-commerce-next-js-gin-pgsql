@@ -29,8 +29,9 @@ func (p *ProductHandler) GetAll(c *gin.Context)  {
 
 	shop := c.Query("shop")
 	category := c.Query("category")
+	keyword := c.Query("keyword")
 
-	products, err := p.usecase.GetAll(pgn.GetSort(), pgn.GetLimit(), pgn.GetOffset(),category, shop)
+	products, err := p.usecase.GetAll(pgn.GetSort(), pgn.GetLimit(), pgn.GetOffset(),category, shop, keyword)
 
 	if err != nil {
 		response.ErrorResponse(c.Writer, err.Error(), http.StatusNotFound)

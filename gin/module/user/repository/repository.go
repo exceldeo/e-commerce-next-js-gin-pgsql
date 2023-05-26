@@ -112,7 +112,14 @@ func(u *userRepo) GetAddressByID(id int) (*models.Address, error) {
 }
 
 func(u *userRepo) AddAddress(address models.Address) (*models.Address, error) {
-	result := u.db.Create(&address)
+	
+	result := u.db.Model(&models.Address{}).Where("user_id = ?", address.UserId).Update("is_default", false)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	result = u.db.Create(&address)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -142,6 +149,7 @@ func(u *userRepo) GetCartByUserID(id int) ([]*models.Cart, error) {
 	var cart []*models.Cart
 
 	result := u.db.
+		Preload("Product").
 		Where("user_id = ?", id).
 		Find(&cart)
 
@@ -322,8 +330,7 @@ func(u *userRepo) GetProductByID(id int) (*models.Product, error) {
 	var product models.Product
 
 	result := u.db.
-		Where("id = ?", id).
-		Find(&product)
+		First(&product,id)
 	
 	if result.Error != nil {
 		return nil, result.Error

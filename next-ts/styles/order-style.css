@@ -1,0 +1,130 @@
+.invoice { 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03); 
+    background-color: #fff; 
+    border-radius: 3px; 
+    border: none; 
+    position: relative; 
+    margin-bottom: 30px; 
+    padding: 40px;
+} 
+
+.invoice hr  { 
+    margin-top: 40px; 
+    margin-bottom: 40px; 
+    border-top-color: #f9f9f9;
+} 
+
+address { 
+    margin-bottom: 1rem; 
+    font-style: normal; 
+    line-height: inherit;
+} 
+
+.section-title  { 
+    font-size: 18px; 
+    color: #191d21; 
+    font-weight: 600; 
+    position: relative; 
+    margin: 30px 0 25px 0;
+} 
+
+.section-title:before  { 
+    content: ' '; 
+    border-radius: 5px; 
+    height: 8px; 
+    width: 30px; 
+    background-color: #6777ef; 
+    display: inline-block; 
+    float: left; 
+    margin-top: 6px; 
+    margin-right: 15px;
+} 
+
+.table-responsive { 
+    display: block; 
+    width: 100%; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+} 
+
+.invoice .invoice-detail-item  { 
+    margin-bottom: 15px;
+} 
+
+.table { 
+    width:   100%; 
+    margin-bottom:   1rem; 
+    color:   inherit;
+    font-size: 15px !important;
+} 
+
+.invoice .invoice-detail-item .invoice-detail-name  { 
+    letter-spacing: 0.3px; 
+    color: #98a6ad; 
+    margin-bottom: 4px;
+} 
+
+.invoice .invoice-detail-item .invoice-detail-value  { 
+    font-size: 18px; 
+    color: #34395e; 
+    font-weight: 700;
+} 
+
+.invoice .invoice-detail-item .invoice-detail-value.invoice-detail-value-lg  { 
+    font-size: 24px;
+} 
+
+.badge { 
+    display: inline-block; 
+    padding: 0.25em 0.4em; 
+    font-size: 75%; 
+    font-weight: 700; 
+    line-height: 1; 
+    text-align: center; 
+    white-space: nowrap; 
+    vertical-align: baseline; 
+    border-radius: 0.25rem; 
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+} 
+
+.badge-info { 
+    color: #fff; 
+    background-color: #17a2b8;
+} 
+
+.badge { 
+    vertical-align: middle; 
+    padding: 7px 12px; 
+    font-weight: 600; 
+    letter-spacing: 0.3px; 
+    border-radius: 30px; 
+    font-size: 12px;
+} 
+
+.badge.badge-info { 
+    background-color: #3abaf4;
+} 
+
+.table th  { 
+    padding: 0.75rem; 
+    vertical-align: top; 
+    border-top: 1px solid #dee2e6;
+} 
+
+.table:not(.table-bordered) th  { 
+    border-top: none;
+} 
+
+.table.table-md th  { 
+    padding: 10px 15px;
+} 
+
+.table td  { 
+    padding:  0.75rem; 
+    vertical-align:  top; 
+    border-top:  none;
+} 
+
+.table.table-md td  { 
+    padding: 10px 15px;
+} 

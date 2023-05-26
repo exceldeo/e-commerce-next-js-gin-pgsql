@@ -1,0 +1,98 @@
+{
+  "provice": [
+    {
+      "id": 1,
+      "name": "Jakarta",
+      "city": [
+        {
+          "id": 1,
+          "name": "Jakarta Barat"
+        },
+        {
+          "id": 2,
+          "name": "Jakarta Timur"
+        },
+        {
+          "id": 3,
+          "name": "Jakarta Selatan"
+        },
+        {
+          "id": 4,
+          "name": "Jakarta Utara"
+        },
+        {
+          "id": 5,
+          "name": "Jakarta Pusat"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Jawa Barat",
+      "city": [
+        {
+          "id": 1,
+          "name": "Bandung"
+        },
+        {
+          "id": 2,
+          "name": "Bekasi"
+        },
+        {
+          "id": 3,
+          "name": "Bogor"
+        },
+        {
+          "id": 4,
+          "name": "Cirebon"
+        },
+        {
+          "id": 5,
+          "name": "Depok"
+        },
+        {
+          "id": 6,
+          "name": "Sukabumi"
+        },
+        {
+          "id": 7,
+          "name": "Tasikmalaya"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Jawa Tengah",
+      "city": [
+        {
+          "id": 1,
+          "name": "Magelang"
+        },
+        {
+          "id": 2,
+          "name": "Pekalongan"
+        },
+        {
+          "id": 3,
+          "name": "Purwokerto"
+        },
+        {
+          "id": 4,
+          "name": "Semarang"
+        },
+        {
+          "id": 5,
+          "name": "Solo"
+        },
+        {
+          "id": 6,
+          "name": "Surakarta"
+        },
+        {
+          "id": 7,
+          "name": "Tegal"
+        }
+      ]
+    }
+  ]
+}

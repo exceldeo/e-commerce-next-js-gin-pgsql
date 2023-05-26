@@ -16,8 +16,8 @@ func NewProductUscs(repository product.Repository) product.UseCase {
 }
 
 
-func (c *productUC) GetAll(sort string, limit int, offset int, slugCategory string, usernameShop string) ([]*models.Product , error) {
-	products, err := c.repository.GetAll(sort, limit, offset, slugCategory, usernameShop)
+func (c *productUC) GetAll(sort string, limit int, offset int, slugCategory string, usernameShop string, keyword string) ([]*models.Product , error) {
+	products, err := c.repository.GetAll(sort, limit, offset, slugCategory, usernameShop, keyword)
 	if err != nil {
 		return nil, err
 	}
